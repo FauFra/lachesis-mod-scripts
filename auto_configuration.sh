@@ -33,6 +33,7 @@ echo "[INFO] Updating paths ($current_directory)"
 	exit
 fi
 
+#checking java version
 if [[ ! $(java -version 2>&1 | grep 1.8.0_312) ]];
 then
   echo "[INFO] Please, choose Java 8"
@@ -42,6 +43,7 @@ then
   sudo  update-alternatives --config javac
 fi
 
+#checking architecture
 arch=$(uname -m)
 echo "[INFO] Architecture $arch"
 if [[ $arch == "x86_64" ]]

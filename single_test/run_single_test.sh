@@ -28,4 +28,5 @@ EXPERIMENT_FOLDER="${COMMIT_CODE}_${DATE_CODE}"
 
 unlink ./fausto/single_test/config.yaml
 
+./fausto/reproduce/generate_plot.sh $EXPERIMENT_FOLDER
 #./reproduce/plot.py --plots qs-comparison latency-percentiles-legend --path "data/output/$EXPERIMENT_FOLDER"

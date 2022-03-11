@@ -18,7 +18,7 @@ EXPERIMENT_FOLDER="${COMMIT_CODE}_${DATE_CODE}"
 
 ../flink-1.11.2/bin/stop-cluster.sh
 
-./scripts/run.py ./fausto/scripts/templates/StormLinearRoadKafkaOsNiceCPUShare.yaml -d "$DURATION" -r "$REPS" --statisticsHost "$(hostname)" --kafkaHost "$KAFKA_HOST" -c "$DATE_CODE" --sampleLatency true
+./scripts/run.py ./fausto/scripts/templates/StormLinearRoadKafkaOsNiceRT.yaml -d "$DURATION" -r "$REPS" --statisticsHost "$(hostname)" --kafkaHost "$KAFKA_HOST" -c "$DATE_CODE" --sampleLatency true
 
 ./fausto/reproduce/plot.py --plots qs-comparison latency-percentiles-legend --path "data/output/$EXPERIMENT_FOLDER"
 

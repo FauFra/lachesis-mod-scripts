@@ -27,7 +27,7 @@ sns.set_style("ticks")
 # Ingore unused data for faster loading
 IGNORED_FILES = ['reads.csv', 'writes.csv']
 # Used to sort variants
-BASIC_VARIANT_ORDER = ['OS', 'LACHESIS', 'HAREN', 'EDGEWISE', 'RANDOM']
+BASIC_VARIANT_ORDER = ['OS', 'LACHESIS-NICE', 'LACHESIS-CPUSHARE', 'LACHESIS', 'HAREN', 'EDGEWISE', 'RANDOM']
 # Figures 
 EXPORT_FOLDER='./figures'
 # Discard warmup and cooldown
@@ -211,9 +211,11 @@ def linePlots(parameters, extra_group=None):
     save_fig(g.fig, 'time-series', experimentId(), export=False)
 
 
-def variantOrderKey(variant):
+def variantOrderKey(variant):    
     for idx, variantPart in enumerate(BASIC_VARIANT_ORDER):
+        print(idx, variantPart)
         if variantPart in variant:
+            print(variant, idx)
             return idx
     raise ValueError(f'Unknown variant: {variant}')
 
