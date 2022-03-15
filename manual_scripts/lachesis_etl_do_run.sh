@@ -1,0 +1,5 @@
+#!/bin/bash
+
+taskset -c 4-5 sudo java -Dname=Lachesis -cp ./lachesis/lachesis-0.1.jar io.palyvos.scheduler.integration.StormIntegration  --minPriority 19  --maxPriority -20  --statisticsFolder BASEDIRHERE/scheduling-queries/data/output/etl_statistics/StormETL/1  --statisticsHost node1 --logarithmic --period 1 --cgroupPolicy  one --worker ETLTopology --policy metric:TASK_QUEUE_SIZE_FROM_SUBTASK_DATA:true  --queryGraph BASEDIRHERE/EdgeWISE-Benchmarks/query_graphs/etl.yaml
+#taskset -c 0-3 sudo java -Dname=Lachesis -cp ./lachesis/lachesis-0.1.jar io.palyvos.scheduler.integration.StormIntegration  --minPriority 19  --maxPriority -20  --statisticsFolder /home/frasca/lachesis-experiments/scheduling-queries/data/output/ffdb8a9_074_0937/StormETL_LACHESIS.10000/1  --statisticsHost pianosa --logarithmic --period 1 --cgroupPolicy  one --worker ETLTopology --policy metric:TASK_QUEUE_SIZE_FROM_SUBTASK_DATA:true  --queryGraph /home/frasca/lachesis-experiments/EdgeWISE-Benchmarks/query_graphs/etl.yaml
+
