@@ -64,9 +64,11 @@ done
 
 [[ -n "$STATISTICS_HOST" ]] || { echo "Please provide statistics host with --stat <statisticsHost>"; exit 1; }
 
-if [ $(hostname) == "odroid*" ]; then TASKSET_CORE="0-3" fi
+if [[ $(hostname) == odroid* ]]; then 
+	TASKSET_CORE="0-3" 
+fi
 
 COMMAND="taskset -c 4-5 sudo java -Dname=Lachesis -cp ./lachesis/lachesis-0.1.jar io.palyvos.scheduler.integration.StormIntegration  --translator $TRANSLATOR  --minPriority $MIN_PRIORITY  --maxPriority $MAX_PRIORITY  --statisticsFolder BASEDIRHERE/scheduling-queries/data/output/etl_statistics/StormETL/1  --statisticsHost $STATISTICS_HOST --logarithmic --period $PERIOD --cgroupPolicy  one --worker ETLTopology --policy metric:TASK_QUEUE_SIZE_FROM_SUBTASK_DATA:true  --queryGraph BASEDIRHERE/EdgeWISE-Benchmarks/query_graphs/etl.yaml --log $LOG  --cgroupPeriod 1000"
 
 printf "Executing command: %s\n\n" "$COMMAND"
-$COMMAND
+$COMMAND 2>&1 | tee BASEDIRHERE/scheduling-queries/data/output/etl_statistics/StormETL/1/lachesis_out.log

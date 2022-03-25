@@ -117,4 +117,4 @@ XMX="-Xmx"$MAX_JVM_HEAP"g"
 COMMAND="taskset -c $TASKSET_CORE BASEDIRHERE/apache-storm-1.1.0/bin/storm jar BASEDIRHERE/EdgeWISE-Benchmarks/modules/storm/target/iot-bm-storm-0.1-jar-with-dependencies.jar $XMX -Dname=Storm in.dream_lab.bm.stream_iot.storm.topo.apps.ETLTopology L ETL SYS_sample_data_senml.csv 1 1 BASEDIRHERE/EdgeWISE-Benchmarks/scripts/ etl_topology.properties ETL $ELT_VALUE 1 1 --rate $RATE --statisticsFolder $EXPERIMENT_FOLDER"
 
 printf "Executing command: %s\n\n" "$COMMAND"
-$COMMAND
+$COMMAND 2>&1 | tee $EXPERIMENT_FOLDER/etl_out.log
