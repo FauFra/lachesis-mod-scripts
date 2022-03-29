@@ -93,7 +93,7 @@ if [ ! -d "$EXPERIMENT_FOLDER" ]; then
   mkdir -p $EXPERIMENT_FOLDER
 else
   echo "Cleaning experiment folder $EXPERIMENT_FOLDER"
-  sudo rm -rf "$EXPERIMENT_FOLDER/*"
+  sudo rm -rf $EXPERIMENT_FOLDER/*
 fi
 
 printf "Executing %s %s\n" "$UTILIZATION_STORM" "$HOSTNAME"
