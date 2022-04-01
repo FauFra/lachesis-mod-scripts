@@ -62,11 +62,14 @@ def sum_dropna(a, **kwargs):
 
 
 def aggregate_rep(parameter, extra_params, aggfunc=np.mean):
-    return get(parameter=parameter).groupby(['parameter', 'variant', 'rep', 'node'] + extra_params, )\
+    test = get(parameter=parameter).groupby(['parameter', 'variant', 'rep', 'node'] + extra_params, )\
                                     .aggregate({'value': np.mean})\
                                     .groupby(['parameter', 'variant', 'rep'] + extra_params)\
                                     .aggregate({'value': aggfunc})\
                                     .reset_index()
+    print(parameter)
+    print(test)
+    return test
 
 def aggregate_rep_spe(parameter, extra_params, aggfunc=np.mean):
     return get(parameter=parameter).groupby(['parameter', 'variant', 'rep', 'spe', 'node'] + extra_params)\
@@ -375,8 +378,6 @@ def experimentId():
 '''
 
 def basicPerformancePlot(rates, metric, metric_data, metric_title, metric_scale='linear', ncol=3, bbox=(1,1), bottom=0, export=False, order=None):
-    print("METRIC DATA")
-    print(metric_data)
     def set_axis_info(g, idx, title, xlabel, ylabel, yscale='linear'):
         g.axes.flat[idx].set_title(title)
         g.axes.flat[idx].set_xlabel(xlabel)

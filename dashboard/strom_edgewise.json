@@ -358,7 +358,7 @@
               "options": {
                 "mode": "exclude",
                 "names": [
-                  "moving avg 30 sec"
+                  "spout"
                 ],
                 "prefix": "All except:",
                 "readOnly": true
@@ -403,7 +403,7 @@
           },
           "refCount": 0,
           "refId": "A",
-          "target": "Storm.*.*.*.spout.*.emit-count.default.value",
+          "target": "Storm.*.*.*.spout.*.emit-count.default.value | aliasByNode(4)",
           "textEditor": true
         },
         {
@@ -411,7 +411,7 @@
             "type": "graphite",
             "uid": "lJnoTsL7k"
           },
-          "hide": false,
+          "hide": true,
           "refCount": 0,
           "refId": "B",
           "target": "alias(movingAverage(Storm.*.*.*.spout.*.emit-count.default.value, 5), \"moving avg 5 sec\")",
@@ -422,7 +422,7 @@
             "type": "graphite",
             "uid": "lJnoTsL7k"
           },
-          "hide": false,
+          "hide": true,
           "refCount": 0,
           "refId": "C",
           "target": "alias(movingAverage(Storm.*.*.*.spout.*.emit-count.default.value, 30), \"moving avg 30 sec\")",
@@ -433,10 +433,10 @@
             "type": "graphite",
             "uid": "PcI11ekgk"
           },
-          "hide": false,
+          "hide": true,
           "refCount": 0,
           "refId": "D",
-          "target": "Storm.*.*.*.spout.*.emit-count.default.value | aggregateLine('avg') | aliasByNode(4)",
+          "target": "Storm.*.*.*.spout.*.emit-count.default.value | aggregateLine('avg') | alias(\"avg spout\")",
           "textEditor": true
         }
       ],
@@ -501,7 +501,7 @@
         "x": 12,
         "y": 18
       },
-      "id": 18,
+      "id": 70,
       "options": {
         "legend": {
           "calcs": [],
@@ -521,7 +521,7 @@
           },
           "refCount": 0,
           "refId": "A",
-          "target": "Storm.*.*.*.*Sink.*.execute-count.*.value",
+          "target": "Storm.*.*.*.*Sink.*.execute-count.*.value | aliasByNode(4,5)",
           "textEditor": true
         },
         {
@@ -529,7 +529,7 @@
             "type": "graphite",
             "uid": "PcI11ekgk"
           },
-          "hide": false,
+          "hide": true,
           "refCount": 0,
           "refId": "B",
           "target": "alias(movingAverage(Storm.*.*.*.*Sink.*.execute-count.*.value, 30), \"moving avg 30 sec\")",
@@ -540,12 +540,408 @@
       "type": "timeseries"
     },
     {
+      "description": "Source throughput average 30 seconds",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "blue",
+            "mode": "fixed",
+            "seriesBy": "last"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "spout"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 27
+      },
+      "id": 69,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "lJnoTsL7k"
+          },
+          "hide": false,
+          "refCount": 0,
+          "refId": "C",
+          "target": "movingAverage(Storm.*.*.*.spout.*.emit-count.default.value, 30) | aliasByNode(4)",
+          "textEditor": true
+        }
+      ],
+      "title": "Source Throughput avg 30 sec",
+      "type": "timeseries"
+    },
+    {
+      "description": "Sink throughput average 30 seconds",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 27
+      },
+      "id": 18,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "PcI11ekgk"
+          },
+          "hide": false,
+          "refCount": 0,
+          "refId": "B",
+          "target": "movingAverage(Storm.*.*.*.*Sink.*.execute-count.*.value, 30) | aliasByNode(4,5)",
+          "textEditor": true
+        }
+      ],
+      "title": "Sink Throughput avg 30 secs",
+      "type": "timeseries"
+    },
+    {
+      "description": "Source throughput average",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "dark-orange",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "spout"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 36
+      },
+      "id": 71,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "PcI11ekgk"
+          },
+          "hide": false,
+          "refCount": 0,
+          "refId": "D",
+          "target": "Storm.*.*.*.spout.*.emit-count.default.value | aggregateLine('avg') | aliasByNode(4)",
+          "textEditor": true
+        }
+      ],
+      "title": "Source Throughput avg",
+      "type": "timeseries"
+    },
+    {
+      "description": "Sink throughput average",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 36
+      },
+      "id": 72,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "lJnoTsL7k"
+          },
+          "refCount": 0,
+          "refId": "A",
+          "target": "Storm.*.*.*.*Sink.*.execute-count.*.value | aggregateLine('avg') | aliasByNode(4)",
+          "textEditor": true
+        }
+      ],
+      "title": "Sink Throughput avg",
+      "type": "timeseries"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 27
+        "y": 45
       },
       "id": 40,
       "panels": [],
@@ -608,7 +1004,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 28
+        "y": 46
       },
       "id": 20,
       "options": {
@@ -716,7 +1112,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 28
+        "y": 46
       },
       "id": 59,
       "options": {
@@ -814,7 +1210,7 @@
         "h": 9,
         "w": 24,
         "x": 0,
-        "y": 36
+        "y": 54
       },
       "id": 60,
       "options": {
@@ -901,7 +1297,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 45
+        "y": 63
       },
       "id": 66,
       "options": {
@@ -1012,7 +1408,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 45
+        "y": 63
       },
       "id": 67,
       "options": {
@@ -1123,7 +1519,7 @@
         "h": 9,
         "w": 24,
         "x": 0,
-        "y": 53
+        "y": 71
       },
       "id": 68,
       "options": {
@@ -1159,7 +1555,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 62
+        "y": 80
       },
       "id": 38,
       "panels": [],
@@ -1222,7 +1618,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 63
+        "y": 81
       },
       "id": 24,
       "options": {
@@ -1305,7 +1701,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 63
+        "y": 81
       },
       "id": 14,
       "options": {
@@ -1390,7 +1786,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 71
+        "y": 89
       },
       "id": 51,
       "options": {
@@ -1474,7 +1870,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 71
+        "y": 89
       },
       "id": 58,
       "options": {
@@ -1508,7 +1904,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 79
+        "y": 97
       },
       "id": 64,
       "panels": [],
@@ -1571,7 +1967,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 80
+        "y": 98
       },
       "id": 26,
       "options": {
@@ -1655,7 +2051,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 80
+        "y": 98
       },
       "id": 62,
       "options": {
@@ -1684,16 +2080,240 @@
       "type": "timeseries"
     },
     {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 106
+      },
+      "id": 47,
+      "panels": [
+        {
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisLabel": "mb",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 89
+          },
+          "id": 45,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "graphite",
+                "uid": "lJnoTsL7k"
+              },
+              "refCount": 0,
+              "refId": "A",
+              "target": "Storm.*.utilization.memory.mb",
+              "textEditor": true
+            },
+            {
+              "datasource": {
+                "type": "graphite",
+                "uid": "lJnoTsL7k"
+              },
+              "hide": false,
+              "refCount": 0,
+              "refId": "B",
+              "target": "alias(movingAverage(Storm.*.utilization.memory.mb, 5), \"moving avg 5 sec\")",
+              "textEditor": true
+            },
+            {
+              "datasource": {
+                "type": "graphite",
+                "uid": "lJnoTsL7k"
+              },
+              "hide": false,
+              "refCount": 0,
+              "refId": "C",
+              "target": "alias(movingAverage(Storm.*.utilization.memory.mb, 30), \"moving avg 30 sec\")",
+              "textEditor": true
+            }
+          ],
+          "title": "Storm Memory",
+          "type": "timeseries"
+        },
+        {
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisLabel": "mb",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 89
+          },
+          "id": 50,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "graphite",
+                "uid": "lJnoTsL7k"
+              },
+              "refCount": 0,
+              "refId": "A",
+              "target": "lachesis.*.utilization.memory.mb",
+              "textEditor": true
+            },
+            {
+              "datasource": {
+                "type": "graphite",
+                "uid": "lJnoTsL7k"
+              },
+              "hide": false,
+              "refCount": 0,
+              "refId": "B",
+              "target": "alias(movingAverage(lachesis.*.utilization.memory.mb, 5), \"moving avg 5 sec\")",
+              "textEditor": true
+            },
+            {
+              "datasource": {
+                "type": "graphite",
+                "uid": "lJnoTsL7k"
+              },
+              "hide": false,
+              "refCount": 0,
+              "refId": "C",
+              "target": "alias(movingAverage(lachesis.*.utilization.memory.mb, 30), \"moving avg 30 sec\")",
+              "textEditor": true
+            }
+          ],
+          "title": "Lachesis Memory",
+          "type": "timeseries"
+        }
+      ],
+      "title": "Memory",
+      "type": "row"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 88
+        "y": 107
       },
-      "id": 47,
+      "id": 42,
       "panels": [],
-      "title": "Memory",
+      "title": "CPU",
       "type": "row"
     },
     {
@@ -1703,7 +2323,7 @@
             "mode": "palette-classic"
           },
           "custom": {
-            "axisLabel": "mb",
+            "axisLabel": "percentage",
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
@@ -1751,9 +2371,9 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 89
+        "y": 108
       },
-      "id": 45,
+      "id": 44,
       "options": {
         "legend": {
           "calcs": [],
@@ -1773,7 +2393,7 @@
           },
           "refCount": 0,
           "refId": "A",
-          "target": "Storm.*.utilization.memory.mb",
+          "target": "Storm.*.utilization.cpu.percent",
           "textEditor": true
         },
         {
@@ -1784,7 +2404,7 @@
           "hide": false,
           "refCount": 0,
           "refId": "B",
-          "target": "alias(movingAverage(Storm.*.utilization.memory.mb, 5), \"moving avg 5 sec\")",
+          "target": "alias(movingAverage(Storm.*.utilization.cpu.percent, 5), \"moving avg 5 sec\")",
           "textEditor": true
         },
         {
@@ -1795,11 +2415,11 @@
           "hide": false,
           "refCount": 0,
           "refId": "C",
-          "target": "alias(movingAverage(Storm.*.utilization.memory.mb, 30), \"moving avg 30 sec\")",
+          "target": "alias(movingAverage(Storm.*.utilization.cpu.percent, 30), \"moving avg 30 sec\")",
           "textEditor": true
         }
       ],
-      "title": "Storm Memory",
+      "title": "Storm CPU",
       "type": "timeseries"
     },
     {
@@ -1809,7 +2429,7 @@
             "mode": "palette-classic"
           },
           "custom": {
-            "axisLabel": "mb",
+            "axisLabel": "percentage",
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
@@ -1857,9 +2477,9 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 89
+        "y": 108
       },
-      "id": 50,
+      "id": 48,
       "options": {
         "legend": {
           "calcs": [],
@@ -1879,7 +2499,7 @@
           },
           "refCount": 0,
           "refId": "A",
-          "target": "lachesis.*.utilization.memory.mb",
+          "target": "lachesis.*.utilization.cpu.percent",
           "textEditor": true
         },
         {
@@ -1890,7 +2510,7 @@
           "hide": false,
           "refCount": 0,
           "refId": "B",
-          "target": "alias(movingAverage(lachesis.*.utilization.memory.mb, 5), \"moving avg 5 sec\")",
+          "target": "alias(movingAverage(lachesis.*.utilization.cpu.percent, 5), \"moving avg 5 sec\")",
           "textEditor": true
         },
         {
@@ -1901,11 +2521,142 @@
           "hide": false,
           "refCount": 0,
           "refId": "C",
-          "target": "alias(movingAverage(lachesis.*.utilization.memory.mb, 30), \"moving avg 30 sec\")",
+          "target": "alias(movingAverage(lachesis.*.utilization.cpu.percent, 30), \"moving avg 30 sec\")",
           "textEditor": true
         }
       ],
-      "title": "Lachesis Memory",
+      "title": "Lachesis CPU",
+      "type": "timeseries"
+    },
+    {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "percentage",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "lachesis.pianosa.utilization.cpu.percent"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 116
+      },
+      "id": 49,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "lJnoTsL7k"
+          },
+          "refCount": 0,
+          "refId": "A",
+          "target": "graphite.*.utilization.cpu.percent",
+          "textEditor": true
+        },
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "lJnoTsL7k"
+          },
+          "hide": false,
+          "refCount": 0,
+          "refId": "B",
+          "target": "alias(movingAverage(graphite.*.utilization.cpu.percent, 5), \"moving avg 5 sec\")",
+          "textEditor": true
+        },
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "lJnoTsL7k"
+          },
+          "hide": false,
+          "refCount": 0,
+          "refId": "C",
+          "target": "alias(movingAverage(graphite.*.utilization.cpu.percent, 30), \"moving avg 30 sec\")",
+          "textEditor": true
+        }
+      ],
+      "title": "Graphite CPU",
       "type": "timeseries"
     },
     {
@@ -1914,361 +2665,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 97
-      },
-      "id": 42,
-      "panels": [
-        {
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisLabel": "percentage",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 0,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              }
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 0,
-            "y": 31
-          },
-          "id": 44,
-          "options": {
-            "legend": {
-              "calcs": [],
-              "displayMode": "list",
-              "placement": "bottom"
-            },
-            "tooltip": {
-              "mode": "single",
-              "sort": "none"
-            }
-          },
-          "targets": [
-            {
-              "datasource": {
-                "type": "graphite",
-                "uid": "lJnoTsL7k"
-              },
-              "refCount": 0,
-              "refId": "A",
-              "target": "Storm.*.utilization.cpu.percent",
-              "textEditor": true
-            },
-            {
-              "datasource": {
-                "type": "graphite",
-                "uid": "lJnoTsL7k"
-              },
-              "hide": false,
-              "refCount": 0,
-              "refId": "B",
-              "target": "alias(movingAverage(Storm.*.utilization.cpu.percent, 5), \"moving avg 5 sec\")",
-              "textEditor": true
-            },
-            {
-              "datasource": {
-                "type": "graphite",
-                "uid": "lJnoTsL7k"
-              },
-              "hide": false,
-              "refCount": 0,
-              "refId": "C",
-              "target": "alias(movingAverage(Storm.*.utilization.cpu.percent, 30), \"moving avg 30 sec\")",
-              "textEditor": true
-            }
-          ],
-          "title": "Storm CPU",
-          "type": "timeseries"
-        },
-        {
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisLabel": "percentage",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 0,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              }
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 12,
-            "y": 31
-          },
-          "id": 48,
-          "options": {
-            "legend": {
-              "calcs": [],
-              "displayMode": "list",
-              "placement": "bottom"
-            },
-            "tooltip": {
-              "mode": "single",
-              "sort": "none"
-            }
-          },
-          "targets": [
-            {
-              "datasource": {
-                "type": "graphite",
-                "uid": "lJnoTsL7k"
-              },
-              "refCount": 0,
-              "refId": "A",
-              "target": "lachesis.*.utilization.cpu.percent",
-              "textEditor": true
-            },
-            {
-              "datasource": {
-                "type": "graphite",
-                "uid": "lJnoTsL7k"
-              },
-              "hide": false,
-              "refCount": 0,
-              "refId": "B",
-              "target": "alias(movingAverage(lachesis.*.utilization.cpu.percent, 5), \"moving avg 5 sec\")",
-              "textEditor": true
-            },
-            {
-              "datasource": {
-                "type": "graphite",
-                "uid": "lJnoTsL7k"
-              },
-              "hide": false,
-              "refCount": 0,
-              "refId": "C",
-              "target": "alias(movingAverage(lachesis.*.utilization.cpu.percent, 30), \"moving avg 30 sec\")",
-              "textEditor": true
-            }
-          ],
-          "title": "Lachesis CPU",
-          "type": "timeseries"
-        },
-        {
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "axisLabel": "percentage",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "drawStyle": "line",
-                "fillOpacity": 0,
-                "gradientMode": "none",
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                },
-                "lineInterpolation": "linear",
-                "lineWidth": 1,
-                "pointSize": 5,
-                "scaleDistribution": {
-                  "type": "linear"
-                },
-                "showPoints": "auto",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
-                }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green"
-                  },
-                  {
-                    "color": "red",
-                    "value": 80
-                  }
-                ]
-              }
-            },
-            "overrides": [
-              {
-                "__systemRef": "hideSeriesFrom",
-                "matcher": {
-                  "id": "byNames",
-                  "options": {
-                    "mode": "exclude",
-                    "names": [
-                      "lachesis.pianosa.utilization.cpu.percent"
-                    ],
-                    "prefix": "All except:",
-                    "readOnly": true
-                  }
-                },
-                "properties": [
-                  {
-                    "id": "custom.hideFrom",
-                    "value": {
-                      "legend": false,
-                      "tooltip": false,
-                      "viz": true
-                    }
-                  }
-                ]
-              }
-            ]
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 0,
-            "y": 39
-          },
-          "id": 49,
-          "options": {
-            "legend": {
-              "calcs": [],
-              "displayMode": "list",
-              "placement": "bottom"
-            },
-            "tooltip": {
-              "mode": "single",
-              "sort": "none"
-            }
-          },
-          "targets": [
-            {
-              "datasource": {
-                "type": "graphite",
-                "uid": "lJnoTsL7k"
-              },
-              "refCount": 0,
-              "refId": "A",
-              "target": "graphite.*.utilization.cpu.percent",
-              "textEditor": true
-            },
-            {
-              "datasource": {
-                "type": "graphite",
-                "uid": "lJnoTsL7k"
-              },
-              "hide": false,
-              "refCount": 0,
-              "refId": "B",
-              "target": "alias(movingAverage(graphite.*.utilization.cpu.percent, 5), \"moving avg 5 sec\")",
-              "textEditor": true
-            },
-            {
-              "datasource": {
-                "type": "graphite",
-                "uid": "lJnoTsL7k"
-              },
-              "hide": false,
-              "refCount": 0,
-              "refId": "C",
-              "target": "alias(movingAverage(graphite.*.utilization.cpu.percent, 30), \"moving avg 30 sec\")",
-              "textEditor": true
-            }
-          ],
-          "title": "Graphite CPU",
-          "type": "timeseries"
-        }
-      ],
-      "title": "CPU",
-      "type": "row"
-    },
-    {
-      "collapsed": true,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 98
+        "y": 124
       },
       "id": 32,
       "panels": [
@@ -2458,6 +2855,6 @@
   "timezone": "",
   "title": "Storm EdgeWise Dashboard",
   "uid": "43pByQY7zE",
-  "version": 5,
+  "version": 7,
   "weekStart": ""
 }
