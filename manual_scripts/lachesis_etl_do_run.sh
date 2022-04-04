@@ -16,7 +16,7 @@ printHelp(){
   # printf " %s %54s\n" "--log" "{INFO, DEBUG, etc.} (log4j levels, DEFAULT: info)"
   # printf " %s %48s\n" "--trans" "{rt (real-time thread), nice} (DEFAULT: nice)"
   # exit 1
-  echo "--stat"
+  echo "--stat [REQUIRED]"
   echo "--log"
   echo "--trans"
   echo "--period"

@@ -13,8 +13,8 @@ printHelp(){
   # printf " %s %54s\n" "--log" "{INFO, DEBUG, etc.} (log4j levels, DEFAULT: info)"
   # printf " %s %48s\n" "--trans" "{rt (real-time thread), nice} (DEFAULT: nice)"
   echo "--java-xmx"
-  echo "--rate"
-  echo "--duration"
+  echo "--rate [REQUIRED]"
+  echo "--duration [REQUIRED]"
   echo "--stat-host"
   exit 1
 }
