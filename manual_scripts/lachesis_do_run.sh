@@ -8,6 +8,12 @@ MAX_PRIORITY="-20"
 PERIOD="1000"
 TASKSET_CORE="4-5"
 LACHESIS_VERSION="lachesis"
+QUERY=""
+
+usage(){
+  echo "Usage: $0 --stat <statisticsHost> --query <etl | stat | lr>"
+  exit 1
+}
 
 printHelp(){
   # printf "Usage: %s --stat <statisticsHost> [OPTIONS]\n" "$0"
@@ -17,6 +23,7 @@ printHelp(){
   # printf " %s %48s\n" "--trans" "{rt (real-time thread), nice} (DEFAULT: nice)"
   # exit 1
   echo "--stat [REQUIRED]"
+  echo "--query <etl | stat | lr> [REQUIRED]"
   echo "--log"
   echo "--trans"
   echo "--period"
@@ -46,6 +53,10 @@ while [ $# -gt 0 ]; do
         --mod)
             LACHESIS_VERSION="lachesis-mod"
             ;;
+        --query)
+            QUERY="$2"
+            shift
+            ;;
         --trans)
             if [[ "$2" == "rt" ]]; then
               TRANSLATOR="real-time"
@@ -72,13 +83,29 @@ while [ $# -gt 0 ]; do
     shift
 done
 
-[[ -n "$STATISTICS_HOST" ]] || { echo "Please provide statistics host with --stat <statisticsHost>"; exit 1; }
+[[ -n "$STATISTICS_HOST" ]] || usage
+[[ -n "$QUERY" ]] || usage
 
 if [[ $(hostname) == odroid* ]]; then 
 	TASKSET_CORE="0-3" 
 fi
 
-COMMAND="taskset -c $TASKSET_CORE sudo java -Dname=Lachesis -cp ./$LACHESIS_VERSION/lachesis-0.1.jar io.palyvos.scheduler.integration.StormIntegration  --translator $TRANSLATOR  --minPriority $MIN_PRIORITY  --maxPriority $MAX_PRIORITY  --statisticsFolder BASEDIRHERE/scheduling-queries/data/output/etl_statistics/StormETL/1  --statisticsHost $STATISTICS_HOST --logarithmic --period $PERIOD --cgroupPolicy  one --worker ETLTopology --policy metric:TASK_QUEUE_SIZE_FROM_SUBTASK_DATA:true  --queryGraph BASEDIRHERE/EdgeWISE-Benchmarks/query_graphs/etl.yaml --log $LOG  --cgroupPeriod 1000"
+if [[ $QUERY == etl ]]; then
+  WORKER="ETLTopology"
+  QUERY_GRAPHS="BASEDIRHERE/EdgeWISE-Benchmarks/query_graphs/etl.yaml"
+elif [[ $QUERY == stat ]]; then
+  WORKER="IoTStatsTopology"
+  QUERY_GRAPHS="BASEDIRHERE/EdgeWISE-Benchmarks/query_graphs/stats.yaml"
+elif [[ $QUERY == lr ]]; then
+  WORKER="LinearRoad"
+  QUERY_GRAPHS="BASEDIRHERE/scheduling-queries/storm_queries/LinearRoad/linear_road.yaml"
+else
+  usage
+fi
+
+
+COMMAND="taskset -c $TASKSET_CORE sudo java -Dname=Lachesis -cp ./$LACHESIS_VERSION/lachesis-0.1.jar io.palyvos.scheduler.integration.StormIntegration  --translator $TRANSLATOR  --minPriority $MIN_PRIORITY  --maxPriority $MAX_PRIORITY  --statisticsFolder BASEDIRHERE/scheduling-queries/data/output/manual_statistics/Storm/1  --statisticsHost $STATISTICS_HOST --logarithmic --period $PERIOD --cgroupPolicy  one --worker $WORKER --policy metric:TASK_QUEUE_SIZE_FROM_SUBTASK_DATA:true  --queryGraph $QUERY_GRAPHS --log $LOG  --cgroupPeriod 1000"
+
 
 printf "Executing command: %s\n\n" "$COMMAND"
-$COMMAND 2>&1 | tee BASEDIRHERE/scheduling-queries/data/output/etl_statistics/StormETL/1/lachesis_out.log
+$COMMAND 2>&1 | tee BASEDIRHERE/scheduling-queries/data/output/manual_statistics/Storm/1/lachesis_out.log

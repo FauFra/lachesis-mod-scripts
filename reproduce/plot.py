@@ -27,7 +27,7 @@ sns.set_style("ticks")
 # Ingore unused data for faster loading
 IGNORED_FILES = ['reads.csv', 'writes.csv']
 # Used to sort variants
-BASIC_VARIANT_ORDER = ['OS', 'LACHESIS-NICE', 'LACHESIS-CPUSHARE', 'LACHESIS', 'HAREN', 'EDGEWISE', 'RANDOM']
+BASIC_VARIANT_ORDER = ['OS', 'LACHESIS', 'LACHESIS-MOD', 'LACHESIS-NICE', 'LACHESIS-CPUSHARE', 'HAREN', 'EDGEWISE', 'RANDOM']
 # Figures 
 EXPORT_FOLDER='./figures'
 # Discard warmup and cooldown
@@ -68,7 +68,11 @@ def aggregate_rep(parameter, extra_params, aggfunc=np.mean):
                                     .aggregate({'value': aggfunc})\
                                     .reset_index()
     print(parameter)
-    print(test)
+    with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
+        print(test)        
+
+    # print(len(test))
+
     return test
 
 def aggregate_rep_spe(parameter, extra_params, aggfunc=np.mean):
@@ -216,9 +220,7 @@ def linePlots(parameters, extra_group=None):
 
 def variantOrderKey(variant):    
     for idx, variantPart in enumerate(BASIC_VARIANT_ORDER):
-        print(idx, variantPart)
-        if variantPart in variant:
-            print(variant, idx)
+        if variantPart == variant:            
             return idx
     raise ValueError(f'Unknown variant: {variant}')
 
