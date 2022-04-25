@@ -101,11 +101,11 @@ echo "> Statistics host: $STAT_HOSTNAME"
 
 #Clear graphite
 echo "> Cleaning graphite on host $STAT_HOSTNAME..."
-ssh $STAT_HOSTNAME "BASEDIRHERE/scheduling-queries/scripts/clear_graphite.sh"
+ssh $STAT_HOSTNAME "BASEDIRHERE/scheduling-queries/scripts/clear_graphite.sh || BASEDIRHERE/scheduling-queries/scripts/clear_graphite.sh" 
 
 #Stop utilization storm scripts
 echo "> Stopping utilization storm scripts..."
-kill -n 9 $(pgrep -f "$UTILIZATION_STORM $STAT_HOSTNAME" | awk '{print $1}')
+kill -n 9 $(pgrep -f "$UTILIZATION_STORM $STAT_HOSTNAME" | awk '{print $1}') || continue
 
 if [ ! -d "$EXPERIMENT_FOLDER" ]; then
   echo "> Creating experiment folder at $EXPERIMENT_FOLDER"

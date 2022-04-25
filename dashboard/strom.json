@@ -665,12 +665,129 @@
       "type": "timeseries"
     },
     {
+      "description": "Source throughput average",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 35
+      },
+      "id": 59,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "8.4.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "lJnoTsL7k"
+          },
+          "refCount": 0,
+          "refId": "A",
+          "target": "Storm.*.*.*.source.*.emit-count.default.value | aggregateLine('avg') | aliasByNode(4,6)",
+          "textEditor": true
+        }
+      ],
+      "title": "Source Throughput Avg",
+      "type": "gauge"
+    },
+    {
+      "description": "Sink throughput average",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 35
+      },
+      "id": 60,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      },
+      "pluginVersion": "8.4.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "graphite",
+            "uid": "lJnoTsL7k"
+          },
+          "refId": "A",
+          "target": "Storm.*.*.*.sink.*.execute-count.*.value | aggregateLine('avg') | aliasByNode(4,7)",
+          "textEditor": true
+        }
+      ],
+      "title": "Sink Throughput avg",
+      "type": "gauge"
+    },
+    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 35
+        "y": 44
       },
       "id": 40,
       "panels": [],
@@ -758,7 +875,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 36
+        "y": 45
       },
       "id": 20,
       "options": {
@@ -891,7 +1008,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 36
+        "y": 45
       },
       "id": 22,
       "options": {
@@ -948,7 +1065,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 44
+        "y": 53
       },
       "id": 38,
       "panels": [],
@@ -1011,7 +1128,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 45
+        "y": 54
       },
       "id": 24,
       "options": {
@@ -1094,7 +1211,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 45
+        "y": 54
       },
       "id": 14,
       "options": {
@@ -1179,7 +1296,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 53
+        "y": 62
       },
       "id": 51,
       "options": {
@@ -1263,7 +1380,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 53
+        "y": 62
       },
       "id": 58,
       "options": {
@@ -1292,96 +1409,12 @@
       "type": "timeseries"
     },
     {
-      "description": "External queue",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 61
-      },
-      "id": 26,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "graphite",
-            "uid": "lJnoTsL7k"
-          },
-          "refId": "A",
-          "target": "Storm.*.*.*.*.*.external-queue-size.*",
-          "textEditor": true
-        }
-      ],
-      "title": "External Queue Size",
-      "type": "timeseries"
-    },
-    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 69
+        "y": 70
       },
       "id": 47,
       "panels": [],
@@ -1443,7 +1476,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 70
+        "y": 71
       },
       "id": 45,
       "options": {
@@ -1549,7 +1582,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 70
+        "y": 71
       },
       "id": 50,
       "options": {
@@ -1606,7 +1639,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 78
+        "y": 79
       },
       "id": 42,
       "panels": [],
@@ -1668,7 +1701,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 79
+        "y": 80
       },
       "id": 44,
       "options": {
@@ -1774,7 +1807,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 79
+        "y": 80
       },
       "id": 48,
       "options": {
@@ -1905,7 +1938,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 87
+        "y": 88
       },
       "id": 49,
       "options": {
@@ -1962,7 +1995,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 95
+        "y": 96
       },
       "id": 32,
       "panels": [],
@@ -2025,7 +2058,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 96
+        "y": 97
       },
       "id": 30,
       "options": {
@@ -2109,7 +2142,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 96
+        "y": 97
       },
       "id": 28,
       "options": {
@@ -2146,13 +2179,13 @@
     "list": []
   },
   "time": {
-    "from": "now-5m",
+    "from": "2022-04-21T09:36:04.000Z",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Storm Dashboard",
   "uid": "43pByQY7z",
-  "version": 51,
+  "version": 2,
   "weekStart": ""
 }
