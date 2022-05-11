@@ -23,9 +23,9 @@ printHelp(){
   # printf " %s %48s\n" "--trans" "{rt (real-time thread), nice} (DEFAULT: nice)"
   # exit 1
   echo "--stat [REQUIRED]"
-  echo "--query <etl | stat | lr> [REQUIRED]"
+  echo "--query <etl | stat | lr | vs> [REQUIRED]"
   echo "--log"
-  echo "--trans"
+  echo "--transl"
   echo "--period"
   echo "--mod"
   exit 1
@@ -57,7 +57,7 @@ while [ $# -gt 0 ]; do
             QUERY="$2"
             shift
             ;;
-        --trans)
+        --transl)
             if [[ "$2" == "rt" ]]; then
               TRANSLATOR="real-time"
               MIN_PRIORITY="1"
@@ -99,6 +99,9 @@ elif [[ $QUERY == stat ]]; then
 elif [[ $QUERY == lr ]]; then
   WORKER="LinearRoad"
   QUERY_GRAPHS="BASEDIRHERE/scheduling-queries/storm_queries/LinearRoad/linear_road.yaml"
+elif [[ $QUERY == vs ]]; then
+  WORKER="VoipStream"
+  QUERY_GRAPHS="BASEDIRHERE/scheduling-queries/storm_queries/VoipStream/voip_stream.yaml"
 else
   usage
 fi

@@ -7,4 +7,4 @@ function usage() {
 
 [[ -z $1 ]] && usage
 
-./fausto/reproduce/plot.py --plots qs-comparison latency-percentiles-legend --path "data/output/$1"
+./fausto/reproduce/plot.py --plots qs-comparison --path "data/output/$1"

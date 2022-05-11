@@ -4,7 +4,8 @@ set -e
 
 function usage() {
     echo "Usage: $0 --rate <rate> --duration <duration> --query <stat | etl>"
-    echo "Usage: $0 --rate <rate> --duration <duration> --query <lr> --kafka-host <kakfa_hostname>"
+    echo "Usage: $0 --rate <rate> --duration <duration> --query <lr | vs> --kafka-host <kakfa_hostname>"
+    echo "Use -h to know the others parameters"
     exit 1
 }
 
@@ -19,7 +20,7 @@ printHelp(){
   echo "--query [REQUIRED]"
   echo "--kafka-host [REQUIRED for lr]"
   echo "--stat-host"
-  echo "--java-xmx"
+  echo "--java-xmx (GB)"
   exit 1
 }
 
@@ -86,7 +87,7 @@ done
 [[ -z $RATE ]] && usage
 [[ -z $DURATION ]] && usage
 [[ -z $QUERY ]] && usage
-[[ $QUERY == lr && -z $KAFKA_HOSTNAME ]] && usage
+[[ ($QUERY == lr  || $QUERY == vs) && -z $KAFKA_HOSTNAME ]] && usage
 
 # Retrieve statistics host
 if [[ -z $STAT_HOSTNAME ]]; then
@@ -115,6 +116,7 @@ else
   sudo rm -rf $EXPERIMENT_FOLDER/*
 fi
 
+#Script for storm statistics (displayed in grafana)
 echo "> Executing $UTILIZATION_STORM $STAT_HOSTNAME"
 $UTILIZATION_STORM $STAT_HOSTNAME &
 
@@ -133,9 +135,15 @@ TOTAL_TUPLES="$(( $RATE*$DURATION*60 ))"
 XMX="-Xmx"$MAX_JVM_HEAP"g"
 BASE_COMMAND="taskset -c $TASKSET_CORE"
 
-if [[ $QUERY == lr ]]; then
+if [[ $QUERY == lr || $QUERY == vs ]]; then
+  if [[ $QUERY == lr ]]; then
+    QR="LinearRoad"
+  else
+    QR="VoipStream"
+  fi
+
   KAFKA_STOP_COMMAND="ssh -o PasswordAuthentication=no -o KbdInteractiveAuthentication=no -o ChallengeResponseAuthentication=no $KAFKA_HOSTNAME 'pkill -f start-source.sh &>> BASEDIRHERE/scheduling-queries/kafka-source/command.log &'"
-  KAFKA_START_COMMAND="ssh -o PasswordAuthentication=no -o KbdInteractiveAuthentication=no -o ChallengeResponseAuthentication=no $KAFKA_HOSTNAME 'BASEDIRHERE/scheduling-queries/kafka-source/start-source.sh  --rate $RATE   --configFile BASEDIRHERE/scheduling-queries/storm_queries/LinearRoad/Configurations/seqs_kafka.json --graphiteHost $STAT_HOSTNAME  &>> BASEDIRHERE/scheduling-queries/kafka-source/command.log &'"
+  KAFKA_START_COMMAND="ssh -o PasswordAuthentication=no -o KbdInteractiveAuthentication=no -o ChallengeResponseAuthentication=no $KAFKA_HOSTNAME 'BASEDIRHERE/scheduling-queries/kafka-source/start-source.sh  --rate $RATE   --configFile BASEDIRHERE/scheduling-queries/storm_queries/$QR/Configurations/seqs_kafka.json --graphiteHost $STAT_HOSTNAME  &>> BASEDIRHERE/scheduling-queries/kafka-source/command.log &'"
 
   echo "> Stopping kafka on $KAFKA_HOSTNAME"
   echo $KAFKA_STOP_COMMAND
@@ -156,6 +164,8 @@ elif [[ $QUERY == stat ]]; then
   COMMAND="$BASE_COMMAND BASEDIRHERE/apache-storm-1.1.0/bin/storm jar BASEDIRHERE/EdgeWISE-Benchmarks/modules/storm/target/iot-bm-storm-0.1-jar-with-dependencies.jar $XMX -Dname=Storm in.dream_lab.bm.stream_iot.storm.topo.apps.IoTStatsTopology L STATS SYS_sample_data_senml.csv 1 1 BASEDIRHERE/EdgeWISE-Benchmarks/scripts/ stats_with_vis_topo.properties STATS $TOTAL_TUPLES 1 1 --rate $RATE --statisticsFolder $EXPERIMENT_FOLDER"        
 elif [[ $QUERY == lr ]]; then
   COMMAND="$BASE_COMMAND BASEDIRHERE/apache-storm-1.2.3/bin/storm  jar BASEDIRHERE/scheduling-queries/storm_queries/LinearRoad/target/LinearRoad-1.0-SNAPSHOT.jar  $XMX -Dname=Storm LinearRoad.LinearRoad   --time $(( $DURATION*60 )) --kafkaHost $KAFKA_HOSTNAME:9092 --conf BASEDIRHERE/scheduling-queries/storm_queries/LinearRoad/Configurations/seqs_kafka.json --rate $RATE --statisticsFolder $EXPERIMENT_FOLDER --sampleLatency true"
+elif [[ $QUERY == vs ]]; then
+  COMMAND="$BASE_COMMAND BASEDIRHERE/apache-storm-1.2.3/bin/storm  jar BASEDIRHERE/scheduling-queries/storm_queries/VoipStream/target/VoipStream-1.0-SNAPSHOT.jar  $XMX  -Dname=Storm VoipStream.VoipStream   --time $(( $DURATION*60 )) --kafkaHost $KAFKA_HOSTNAME:9092 --conf BASEDIRHERE/scheduling-queries/storm_queries/VoipStream/Configurations/seqs_kafka.json --rate $RATE --statisticsFolder $EXPERIMENT_FOLDER --sampleLatency true"
 else 
   usage
 fi
