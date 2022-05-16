@@ -157,6 +157,11 @@ def compute_latency_percentiles(parameter, aggfuncs, names):
         raise ValueError('len must be equal')
     dfs = []
     for aggfunc, name in zip(aggfuncs, names):
+        df1 = get(parameter=parameter).groupby(['experiment', 'rate', 'variant'])
+        for a in df1:
+            test = a[1]['value'].dropna() 
+            if not test:
+                print('empty')            
         df = get(parameter=parameter).groupby(['experiment', 'rate', 'variant']).aggregate({'value': aggfunc}).copy().reset_index()
         if len(df) == 0:
             continue
@@ -250,7 +255,7 @@ def loadData(folder):
         tmax = df.t.max()
         warmup = floor(tmax * WARMUP_PERCENTAGE)
         cooldown = ceil(tmax - tmax * COOLDOWN_PERCENTAGE)
-        #print(f'Removing [0, {warmup}) and ({cooldown}, {tmax}]')
+        # print(f'Removing [0, {warmup}) and ({cooldown}, {tmax}]')
         df.loc[(df.t < warmup) | (df.t > cooldown), 'value'] = np.nan
         return df
     
@@ -319,7 +324,6 @@ def loadData(folder):
     replaceParameter(DATA, 'sink-throughput', 'sink-throughput-raw')
     replaceParameter(DATA, 'latency', 'latency-raw')
     replaceParameter(DATA, 'end-latency', 'end-latency-raw')
-        
     # Preprocess
     DATA.loc[DATA['parameter'].isin(['latency', 'end-latency', 'latency-sampled', 'end-latency-sampled']), 'value'] /= 1e3 # Convert latency to seconds
     DATA.loc[(DATA['parameter'].isin(['latency',  'end-latency', 'latency-sampled', 'end-latency-sampled']) & (DATA['value'] < 0)), 'value'] = np.nan 
@@ -388,22 +392,26 @@ def basicPerformancePlot(rates, metric, metric_data, metric_title, metric_scale=
     
     raw_data = []
     raw_data.append(aggregate_rep('throughput', ['rate'], sum_dropna))
+    raw_data.append(aggregate_rep('sink-throughput', ['rate'], sum_dropna))
     raw_data.append(aggregate_rep('latency', ['rate']))
     raw_data.append(aggregate_rep('end-latency', ['rate']))
+    raw_data.append(aggregate_node_rep('output-queue', ['rate'], np.mean, relative_variance))
     raw_data.append(metric_data)    
     plot_data = pd.concat(raw_data)
     print(f'Plotting rates', rates)
     plot_data = plot_data[(plot_data.rate >= rates[0]) & (plot_data.rate <= rates[1])]
     g = sns.relplot(data=plot_data, x='rate', y='value', hue='variant', style='variant', col='parameter', 
                     hue_order=order, style_order=order,
-                    col_order=['throughput', 'latency', 'end-latency', metric],
+                    col_order=['throughput', 'sink-throughput', 'latency', 'end-latency', metric, 'output-queue'],
                     height=2, aspect=1.75, col_wrap=2, kind='line',  markers=True, 
                     facet_kws={'sharey': False, 'legend_out': False})
     
-    set_axis_info(g, 0, 'Throughput (t/s)', 'Input Rate (t/s)', '')
-    set_axis_info(g, 1, 'Latency (s)', 'Input Rate (t/s)', '', 'log')
-    set_axis_info(g, 2, 'End-to-end Latency (s)', 'Input Rate (t/s)', '', 'log')
-    set_axis_info(g, 3, metric_title, 'Input Rate (t/s)', '', metric_scale)
+    set_axis_info(g, 0, 'Source Throughput (t/s)', 'Input Rate (t/s)', '')
+    set_axis_info(g, 1, 'Sink Throughput (t/s)', 'Input Rate (t/s)', '')
+    set_axis_info(g, 2, 'Latency (s)', 'Input Rate (t/s)', '', 'log')
+    set_axis_info(g, 3, 'End-to-end Latency (s)', 'Input Rate (t/s)', '', 'log')
+    set_axis_info(g, 4, metric_title, 'Input Rate (t/s)', '', metric_scale)
+    set_axis_info(g, 5, 'QS Goal Output', 'Input Rate (t/s)', '', metric_scale)
     sns.despine()
     h,l = g.axes[0].get_legend_handles_labels()
     g.axes[0].legend_.remove()
@@ -664,6 +672,10 @@ PLOT_FUNCTIONS = {
     'tables-percentiles': lambda: createTables(parameters=['latency-sampled-p99', 'latency-sampled-p999', 'end-latency-sampled-p99', 'end-latency-sampled-p999']),
     'intro': lambda: paperIntroPlot(rates=(-np.inf, np.inf), export=True)
 }
+
+def test(x):
+    print(x)
+    return x
 
 if __name__ == '__main__':
 
