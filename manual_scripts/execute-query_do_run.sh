@@ -1,6 +1,15 @@
 #!/bin/bash
 
+#TODO: mettere una funzione di cleanup
+
 set -e
+
+function cleanup(){
+  for ((i=0; i<${#EXIT_COMMANDS[@]}; i++))
+  do
+    ${EXIT_COMMANDS[$i]}
+  done
+}
 
 function usage() {
     echo "Usage: $0 --rate <rate> --duration <duration> --query <stat | etl>"
@@ -18,7 +27,7 @@ printHelp(){
   echo "--rate [REQUIRED]"
   echo "--duration [REQUIRED]"
   echo "--query [REQUIRED]"
-  echo "--kafka-host [REQUIRED for lr]"
+  echo "--kafka-host [REQUIRED for lr|vs]"
   echo "--stat-host"
   echo "--java-xmx (GB)"
   exit 1
@@ -41,6 +50,7 @@ STAT_HOSTNAME=""
 KAFKA_HOSTNAME=""
 TASKSET_CORE="0-3"
 QUERY=""
+EXIT_COMMANDS=()
 
 
 while [ $# -gt 0 ]; do
@@ -106,7 +116,11 @@ ssh $STAT_HOSTNAME "BASEDIRHERE/scheduling-queries/scripts/clear_graphite.sh || 
 
 #Stop utilization storm scripts
 echo "> Stopping utilization storm scripts..."
-kill -n 9 $(pgrep -f "$UTILIZATION_STORM $STAT_HOSTNAME" | awk '{print $1}') || continue
+# kill -n 9 $(pgrep -f "$UTILIZATION_STORM $STAT_HOSTNAME" | awk '{print $1}') || continue
+UTILIZATION_COMMAND="pkill -f $UTILIZATION_STORM"
+$UTILIZATION_COMMAND || true
+EXIT_COMMANDS+=("$UTILIZATION_COMMAND")
+
 
 if [ ! -d "$EXPERIMENT_FOLDER" ]; then
   echo "> Creating experiment folder at $EXPERIMENT_FOLDER"
@@ -155,17 +169,20 @@ if [[ $QUERY == lr || $QUERY == vs ]]; then
   echo $KAFKA_START_COMMAND
   eval $KAFKA_START_COMMAND
 
-  trap "eval $KAFKA_STOP_COMMAND" EXIT
+  # trap "eval $KAFKA_STOP_COMMAND" EXIT
+  EXIT_COMMANDS+=("eval $KAFKA_STOP_COMMAND")
 fi
 
+trap cleanup EXIT
+
 if [[ $QUERY == etl ]]; then
-  COMMAND="$BASE_COMMAND BASEDIRHERE/apache-storm-1.1.0/bin/storm jar BASEDIRHERE/EdgeWISE-Benchmarks/modules/storm/target/iot-bm-storm-0.1-jar-with-dependencies.jar $XMX -Dname=Storm in.dream_lab.bm.stream_iot.storm.topo.apps.ETLTopology L ETL SYS_sample_data_senml.csv 1 1 BASEDIRHERE/EdgeWISE-Benchmarks/scripts/ etl_topology.properties ETL $TOTAL_TUPLES 1 1 --rate $RATE --statisticsFolder $EXPERIMENT_FOLDER"
+  COMMAND="$BASE_COMMAND BASEDIRHERE/apache-storm-1.1.0/bin/storm jar BASEDIRHERE/EdgeWISE-Benchmarks/modules/storm/target/iot-bm-storm-0.1-jar-with-dependencies.jar -c metric.reporter.graphite.report.host=$STAT_HOSTNAME $XMX -Dname=Storm in.dream_lab.bm.stream_iot.storm.topo.apps.ETLTopology L ETL SYS_sample_data_senml.csv 1 1 BASEDIRHERE/EdgeWISE-Benchmarks/scripts/ etl_topology.properties ETL $TOTAL_TUPLES 1 1 --rate $RATE --statisticsFolder $EXPERIMENT_FOLDER"
 elif [[ $QUERY == stat ]]; then
-  COMMAND="$BASE_COMMAND BASEDIRHERE/apache-storm-1.1.0/bin/storm jar BASEDIRHERE/EdgeWISE-Benchmarks/modules/storm/target/iot-bm-storm-0.1-jar-with-dependencies.jar $XMX -Dname=Storm in.dream_lab.bm.stream_iot.storm.topo.apps.IoTStatsTopology L STATS SYS_sample_data_senml.csv 1 1 BASEDIRHERE/EdgeWISE-Benchmarks/scripts/ stats_with_vis_topo.properties STATS $TOTAL_TUPLES 1 1 --rate $RATE --statisticsFolder $EXPERIMENT_FOLDER"        
+  COMMAND="$BASE_COMMAND BASEDIRHERE/apache-storm-1.1.0/bin/storm jar BASEDIRHERE/EdgeWISE-Benchmarks/modules/storm/target/iot-bm-storm-0.1-jar-with-dependencies.jar -c metric.reporter.graphite.report.host=$STAT_HOSTNAME $XMX -Dname=Storm in.dream_lab.bm.stream_iot.storm.topo.apps.IoTStatsTopology L STATS SYS_sample_data_senml.csv 1 1 BASEDIRHERE/EdgeWISE-Benchmarks/scripts/ stats_with_vis_topo.properties STATS $TOTAL_TUPLES 1 1 --rate $RATE --statisticsFolder $EXPERIMENT_FOLDER"        
 elif [[ $QUERY == lr ]]; then
-  COMMAND="$BASE_COMMAND BASEDIRHERE/apache-storm-1.2.3/bin/storm  jar BASEDIRHERE/scheduling-queries/storm_queries/LinearRoad/target/LinearRoad-1.0-SNAPSHOT.jar  $XMX -Dname=Storm LinearRoad.LinearRoad   --time $(( $DURATION*60 )) --kafkaHost $KAFKA_HOSTNAME:9092 --conf BASEDIRHERE/scheduling-queries/storm_queries/LinearRoad/Configurations/seqs_kafka.json --rate $RATE --statisticsFolder $EXPERIMENT_FOLDER --sampleLatency true"
+  COMMAND="$BASE_COMMAND BASEDIRHERE/apache-storm-1.2.3/bin/storm  jar BASEDIRHERE/scheduling-queries/storm_queries/LinearRoad/target/LinearRoad-1.0-SNAPSHOT.jar -c metric.reporter.graphite.report.host=$STAT_HOSTNAME $XMX -Dname=Storm LinearRoad.LinearRoad   --time $(( $DURATION*60 )) --kafkaHost $KAFKA_HOSTNAME:9092 --conf BASEDIRHERE/scheduling-queries/storm_queries/LinearRoad/Configurations/seqs_kafka.json --rate $RATE --statisticsFolder $EXPERIMENT_FOLDER --sampleLatency true"
 elif [[ $QUERY == vs ]]; then
-  COMMAND="$BASE_COMMAND BASEDIRHERE/apache-storm-1.2.3/bin/storm  jar BASEDIRHERE/scheduling-queries/storm_queries/VoipStream/target/VoipStream-1.0-SNAPSHOT.jar  $XMX  -Dname=Storm VoipStream.VoipStream   --time $(( $DURATION*60 )) --kafkaHost $KAFKA_HOSTNAME:9092 --conf BASEDIRHERE/scheduling-queries/storm_queries/VoipStream/Configurations/seqs_kafka.json --rate $RATE --statisticsFolder $EXPERIMENT_FOLDER --sampleLatency true"
+  COMMAND="$BASE_COMMAND BASEDIRHERE/apache-storm-1.2.3/bin/storm  jar BASEDIRHERE/scheduling-queries/storm_queries/VoipStream/target/VoipStream-1.0-SNAPSHOT.jar  -c metric.reporter.graphite.report.host=$STAT_HOSTNAME $XMX  -Dname=Storm VoipStream.VoipStream   --time $(( $DURATION*60 )) --kafkaHost $KAFKA_HOSTNAME:9092 --conf BASEDIRHERE/scheduling-queries/storm_queries/VoipStream/Configurations/seqs_kafka.json --rate $RATE --statisticsFolder $EXPERIMENT_FOLDER --sampleLatency true"
 else 
   usage
 fi

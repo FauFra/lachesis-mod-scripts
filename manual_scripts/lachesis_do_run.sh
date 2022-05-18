@@ -9,6 +9,8 @@ PERIOD="1000"
 TASKSET_CORE="4-5"
 LACHESIS_VERSION="lachesis"
 QUERY=""
+METRIC="INPUT_OUTPUT_EXTERNAL_QUEUE_SIZE"
+
 
 usage(){
   echo "Usage: $0 --stat <statisticsHost> --query <etl | stat | lr>"
@@ -24,6 +26,7 @@ printHelp(){
   # exit 1
   echo "--stat [REQUIRED]"
   echo "--query <etl | stat | lr | vs> [REQUIRED]"
+  echo "--metric <io (INPUT_OUTPUT_QUEUE_SIZE) | ioe (INPUT_OUTPUT_EXTERNAL_QUEUE_SIZE) | ts (TASK_QUEUE_SIZE_FROM_SUBTASK_DATA)>"
   echo "--log"
   echo "--transl"
   echo "--period"
@@ -74,6 +77,21 @@ while [ $# -gt 0 ]; do
             fi
             shift
             ;;
+        --metric)
+          if [[ "$2" == "io"  ]]; then
+            METRIC="INPUT_OUTPUT_QUEUE_SIZE"
+          elif [[ "$2" == "ioe" ]]; then
+            METRIC="INPUT_OUTPUT_EXTERNAL_QUEUE_SIZE"
+          elif [[ "$2" == "iok" ]]; then  
+            METRIC="INPUT_OUTPUT_KAFKA_QUEUE_SIZE"
+          elif [[ "$2" == "ts" ]]; then
+            METRIC="TASK_QUEUE_SIZE_FROM_SUBTASK_DATA"
+          else
+            printf "Metric %s unknown\n" "$2"
+            exit 1
+          fi
+          shift
+          ;;
         *) # End of all options.
             echo $1 not known
             shift
@@ -106,8 +124,18 @@ else
   usage
 fi
 
+if [ -z "$METRIC" ]; then
+  if [[ $QUERY == vs || $QUERY == lr ]]; then
+    METRIC="INPUT_OUTPUT_KAFKA_QUEUE_SIZE"
+  else
+    METRIC="INPUT_OUTPUT_EXTERNAL_QUEUE_SIZE"
+  fi
+fi
 
-COMMAND="taskset -c $TASKSET_CORE sudo java -Dname=Lachesis -cp ./$LACHESIS_VERSION/lachesis-0.1.jar io.palyvos.scheduler.integration.StormIntegration  --translator $TRANSLATOR  --minPriority $MIN_PRIORITY  --maxPriority $MAX_PRIORITY  --statisticsFolder BASEDIRHERE/scheduling-queries/data/output/manual_statistics/Storm/1  --statisticsHost $STATISTICS_HOST --logarithmic --period $PERIOD --cgroupPolicy  one --worker $WORKER --policy metric:TASK_QUEUE_SIZE_FROM_SUBTASK_DATA:true  --queryGraph $QUERY_GRAPHS --log $LOG  --cgroupPeriod 1000"
+
+# COMMAND="taskset -c $TASKSET_CORE sudo java -Dname=Lachesis -cp ./$LACHESIS_VERSION/lachesis-0.1.jar io.palyvos.scheduler.integration.StormIntegration  --translator $TRANSLATOR  --minPriority $MIN_PRIORITY  --maxPriority $MAX_PRIORITY  --statisticsFolder BASEDIRHERE/scheduling-queries/data/output/manual_statistics/Storm/1  --statisticsHost $STATISTICS_HOST --logarithmic --period $PERIOD --cgroupPolicy  one --worker $WORKER --policy metric:TASK_QUEUE_SIZE_FROM_SUBTASK_DATA:true  --queryGraph $QUERY_GRAPHS --log $LOG  --cgroupPeriod 1000"
+COMMAND="taskset -c $TASKSET_CORE sudo java -Dname=Lachesis -cp ./$LACHESIS_VERSION/lachesis-0.1.jar io.palyvos.scheduler.integration.StormIntegration  --translator $TRANSLATOR  --minPriority $MIN_PRIORITY  --maxPriority $MAX_PRIORITY  --statisticsFolder BASEDIRHERE/scheduling-queries/data/output/manual_statistics/Storm/1  --statisticsHost $STATISTICS_HOST --logarithmic --period $PERIOD --cgroupPolicy  one --worker $WORKER --policy metric:$METRIC:true  --queryGraph $QUERY_GRAPHS --log $LOG  --cgroupPeriod 1000"
+
 
 
 printf "Executing command: %s\n\n" "$COMMAND"

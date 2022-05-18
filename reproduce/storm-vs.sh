@@ -15,11 +15,12 @@ KAFKA_HOST="$3"
 DATE_CODE=$(date +%j_%H%M)
 COMMIT_CODE=$(git rev-parse --short HEAD)
 EXPERIMENT_FOLDER="${COMMIT_CODE}_${DATE_CODE}"
+CURRENT_ODROID=$(echo $(hostname) | tr -dc '0-9')
+
 
 ../flink-1.11.2/bin/stop-cluster.sh
 
 ./scripts/run.py ./fausto/scripts/templates/StormVoipStreamKafkaNice.yaml -d "$DURATION" -r "$REPS" --statisticsHost "$(hostname)" --kafkaHost "$KAFKA_HOST" -c "$DATE_CODE" --sampleLatency true
 
-# ./fausto/reproduce/plot.py --plots qs-comparison latency-percentiles-legend --path "data/output/$EXPERIMENT_FOLDER"
 ssh -t pianosa "cd ~/results_experiments && ./local_scripts/download_odroid_pianosa.sh --odroid $CURRENT_ODROID --folder $EXPERIMENT_FOLDER"
 

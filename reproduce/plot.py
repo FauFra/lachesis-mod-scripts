@@ -27,7 +27,7 @@ sns.set_style("ticks")
 # Ingore unused data for faster loading
 IGNORED_FILES = ['reads.csv', 'writes.csv']
 # Used to sort variants
-BASIC_VARIANT_ORDER = ['OS', 'LACHESIS', 'LACHESIS-MOD', 'LACHESIS-NICE', 'LACHESIS-CPUSHARE', 'HAREN', 'EDGEWISE', 'RANDOM']
+BASIC_VARIANT_ORDER = ['OS', 'LACHESIS', 'LACHESIS-MOD', 'LACHESIS-NICE', 'LACHESIS-MOD-NICE', 'LACHESIS-MOD-RT', 'LACHESIS-CPUSHARE', 'HAREN', 'EDGEWISE', 'RANDOM']
 # Figures 
 EXPORT_FOLDER='./figures'
 # Discard warmup and cooldown
