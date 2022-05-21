@@ -182,7 +182,7 @@ elif [[ $QUERY == stat ]]; then
 elif [[ $QUERY == lr ]]; then
   COMMAND="$BASE_COMMAND BASEDIRHERE/apache-storm-1.2.3/bin/storm  jar BASEDIRHERE/scheduling-queries/storm_queries/LinearRoad/target/LinearRoad-1.0-SNAPSHOT.jar -c metric.reporter.graphite.report.host=$STAT_HOSTNAME $XMX -Dname=Storm LinearRoad.LinearRoad   --time $(( $DURATION*60 )) --kafkaHost $KAFKA_HOSTNAME:9092 --conf BASEDIRHERE/scheduling-queries/storm_queries/LinearRoad/Configurations/seqs_kafka.json --rate $RATE --statisticsFolder $EXPERIMENT_FOLDER --sampleLatency true"
 elif [[ $QUERY == vs ]]; then
-  COMMAND="$BASE_COMMAND BASEDIRHERE/apache-storm-1.2.3/bin/storm  jar BASEDIRHERE/scheduling-queries/storm_queries/VoipStream/target/VoipStream-1.0-SNAPSHOT.jar  -c metric.reporter.graphite.report.host=$STAT_HOSTNAME $XMX  -Dname=Storm VoipStream.VoipStream   --time $(( $DURATION*60 )) --kafkaHost $KAFKA_HOSTNAME:9092 --conf BASEDIRHERE/scheduling-queries/storm_queries/VoipStream/Configurations/seqs_kafka.json --rate $RATE --statisticsFolder $EXPERIMENT_FOLDER --sampleLatency true"
+  COMMAND="$BASE_COMMAND BASEDIRHERE/apache-storm-1.2.3/bin/storm  jar BASEDIRHERE/scheduling-queries/storm_queries/VoipStream/target/VoipStream-1.0-SNAPSHOT.jar -c metric.reporter.graphite.report.host=$STAT_HOSTNAME $XMX  -Dname=Storm VoipStream.VoipStream   --time $(( $DURATION*60 )) --kafkaHost $KAFKA_HOSTNAME:9092 --conf BASEDIRHERE/scheduling-queries/storm_queries/VoipStream/Configurations/seqs_kafka.json --rate $RATE --statisticsFolder $EXPERIMENT_FOLDER --sampleLatency true"
 else 
   usage
 fi

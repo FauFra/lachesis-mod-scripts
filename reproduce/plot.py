@@ -71,7 +71,6 @@ def aggregate_rep(parameter, extra_params, aggfunc=np.mean):
     with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
         print(test)        
 
-    # print(len(test))
 
     return test
 
@@ -157,11 +156,6 @@ def compute_latency_percentiles(parameter, aggfuncs, names):
         raise ValueError('len must be equal')
     dfs = []
     for aggfunc, name in zip(aggfuncs, names):
-        df1 = get(parameter=parameter).groupby(['experiment', 'rate', 'variant'])
-        for a in df1:
-            test = a[1]['value'].dropna() 
-            if not test:
-                print('empty')            
         df = get(parameter=parameter).groupby(['experiment', 'rate', 'variant']).aggregate({'value': aggfunc}).copy().reset_index()
         if len(df) == 0:
             continue
@@ -673,9 +667,6 @@ PLOT_FUNCTIONS = {
     'intro': lambda: paperIntroPlot(rates=(-np.inf, np.inf), export=True)
 }
 
-def test(x):
-    print(x)
-    return x
 
 if __name__ == '__main__':
 

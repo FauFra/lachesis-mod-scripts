@@ -24,33 +24,24 @@ variants:
   - name: OS
     spe_command: "{storm_jar} jar {query_jar} -Dname=Storm {class_name} L {topology_name} {dataset_filename} 1 1 {topology_output_dir} {query_properties} {topology_name} {stream_length} {num_workers} 1 --rate {rate} --statisticsFolder {statistics_folder} {extra_args}"
     args: ''
-  - name: LACHESIS
+  - name: LACHESIS-MOD-NICE
     args: ''
     spe_command: "{storm_jar} jar {query_jar} -Xmx2g -Dname=Storm {class_name} L {topology_name} {dataset_filename} 1 1 {topology_output_dir} {query_properties} {topology_name} {stream_length} {num_workers} 1 --rate {rate} --statisticsFolder {statistics_folder} {extra_args}"
     scheduler_command: >
       sudo java -Dname=Lachesis -cp ./lachesis-mod/lachesis-0.1.jar
       io.palyvos.scheduler.integration.StormIntegration --minPriority 19 
       --maxPriority -20  --statisticsFolder {statistics_folder} --statisticsHost {statistics_host} --logarithmic --period 1000 --cgroupPeriod 1000
-      --cgroupPolicy one --worker ETLTopology --policy metric:TASK_QUEUE_SIZE_FROM_SUBTASK_DATA:true
+      --cgroupPolicy one --worker ETLTopology --policy metric:INPUT_OUTPUT_EXTERNAL_QUEUE_SIZE:true
       --queryGraph BASEDIRHERE/EdgeWISE-Benchmarks/query_graphs/etl.yaml
-  - name: LACHESIS-MOD
+  - name: LACHESIS-MOD-RT
     args: ''
     spe_command: "{storm_jar} jar {query_jar} -Xmx2g -Dname=Storm {class_name} L {topology_name} {dataset_filename} 1 1 {topology_output_dir} {query_properties} {topology_name} {stream_length} {num_workers} 1 --rate {rate} --statisticsFolder {statistics_folder} {extra_args}"
     scheduler_command: >
       sudo java -Dname=Lachesis -cp ./lachesis-mod/lachesis-0.1.jar
       io.palyvos.scheduler.integration.StormIntegration --translator real-time --minPriority 1 
       --maxPriority 99  --statisticsFolder {statistics_folder} --statisticsHost {statistics_host} --logarithmic --period 1000 --cgroupPeriod 1000
-      --cgroupPolicy one --worker ETLTopology --policy metric:TASK_QUEUE_SIZE_FROM_SUBTASK_DATA:true
+      --cgroupPolicy one --worker ETLTopology --policy metric:INPUT_OUTPUT_EXTERNAL_QUEUE_SIZE:true
       --queryGraph BASEDIRHERE/EdgeWISE-Benchmarks/query_graphs/etl.yaml
-    # scheduler_command: >
-    #   sudo java -Dname=Lachesis -cp ./lachesis-mod/lachesis-0.1.jar
-    #   io.palyvos.scheduler.integration.StormIntegration --minPriority 19 
-    #   --maxPriority -20  --statisticsFolder {statistics_folder} --statisticsHost {statistics_host} --logarithmic --period 1000 --cgroupPeriod 1000
-    #   --cgroupPolicy one --worker ETLTopology --policy metric:TASK_QUEUE_SIZE_FROM_SUBTASK_DATA:true
-    #   --queryGraph BASEDIRHERE/EdgeWISE-Benchmarks/query_graphs/etl.yaml
-  # - name: EDGEWISE
-  #   spe_command: "{storm_edgewise_jar} jar {query_jar} -Dname=Storm {class_name} L {topology_name} {dataset_filename} 1 1 {topology_output_dir} {query_properties} {topology_name} {stream_length} {num_workers} 30 --rate {rate} --statisticsFolder {statistics_folder} {extra_args}"
-  #   args: ''
 
 topology_name: ETL
 storm_jar: BASEDIRHERE/apache-storm-1.1.0/bin/storm

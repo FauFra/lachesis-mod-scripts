@@ -3,56 +3,53 @@ executor_script: 'scripts/storm_do_run.sh'
 dimensions:
   schema: variant.rate
   rate:
-    # - 1000
-    # - 1125
-    - 1250
-    - 1375
-    - 1500
-    - 1625
-    - 1750
-    - 1875
-    - 2000
-    - 2125
-    - 2250
+    - 300
+    - 310
+    - 320
+    - 330
+    - 340
+    - 350
+    - 360
+    - 370
+    - 380
+    - 390
+    - 400
 
 
 queries:
-  - name: StormETL
-    reference: in.dream_lab.bm.stream_iot.storm.topo.apps.ETLTopology
+  - name: StormStats
+    reference: in.dream_lab.bm.stream_iot.storm.topo.apps.IoTStatsTopology
 
 variants:
   - name: OS
     spe_command: "{storm_jar} jar {query_jar} -Dname=Storm {class_name} L {topology_name} {dataset_filename} 1 1 {topology_output_dir} {query_properties} {topology_name} {stream_length} {num_workers} 1 --rate {rate} --statisticsFolder {statistics_folder} {extra_args}"
     args: ''
-  - name: LACHESIS
+  - name: LACHESIS-MOD-NICE
     args: ''
-    spe_command: "{storm_jar} jar {query_jar} -Xmx2g -Dname=Storm {class_name} L {topology_name} {dataset_filename} 1 1 {topology_output_dir} {query_properties} {topology_name} {stream_length} {num_workers} 1 --rate {rate} --statisticsFolder {statistics_folder} {extra_args}"
-    scheduler_command: >
-      sudo java -Dname=Lachesis -cp ./lachesis/lachesis-0.1.jar
-      io.palyvos.scheduler.integration.StormIntegration --minPriority 19 
-      --maxPriority -20  --statisticsFolder {statistics_folder} --statisticsHost {statistics_host} --logarithmic --period 1000 --cgroupPeriod 1000
-      --cgroupPolicy one --worker ETLTopology --policy metric:TASK_QUEUE_SIZE_FROM_SUBTASK_DATA:true
-      --queryGraph BASEDIRHERE/EdgeWISE-Benchmarks/query_graphs/etl.yaml
-  - name: LACHESIS-MOD
-    args: ''
-    spe_command: "{storm_jar} jar {query_jar} -Xmx2g -Dname=Storm {class_name} L {topology_name} {dataset_filename} 1 1 {topology_output_dir} {query_properties} {topology_name} {stream_length} {num_workers} 1 --rate {rate} --statisticsFolder {statistics_folder} {extra_args}"
+    spe_command: "{storm_jar} jar {query_jar} -Dname=Storm {class_name} L {topology_name} {dataset_filename} 1 1 {topology_output_dir} {query_properties} {topology_name} {stream_length} {num_workers} 1 --rate {rate} --statisticsFolder {statistics_folder} {extra_args}"
     scheduler_command: >
       sudo java -Dname=Lachesis -cp ./lachesis-mod/lachesis-0.1.jar
-      io.palyvos.scheduler.integration.StormIntegration --minPriority 19 
+      io.palyvos.scheduler.integration.StormIntegration --cgroupPolicy one --minPriority 19
       --maxPriority -20  --statisticsFolder {statistics_folder} --statisticsHost {statistics_host} --logarithmic --period 1000 --cgroupPeriod 1000
-      --cgroupPolicy one --worker ETLTopology --policy metric:INPUT_OUTPUT_EXTERNAL_QUEUE_SIZE:true
-      --queryGraph BASEDIRHERE/EdgeWISE-Benchmarks/query_graphs/etl.yaml
-  # - name: EDGEWISE
-  #   spe_command: "{storm_edgewise_jar} jar {query_jar} -Dname=Storm {class_name} L {topology_name} {dataset_filename} 1 1 {topology_output_dir} {query_properties} {topology_name} {stream_length} {num_workers} 30 --rate {rate} --statisticsFolder {statistics_folder} {extra_args}"
-  #   args: ''
+      --worker IoTStatsTopology --policy metric:INPUT_OUTPUT_EXTERNAL_QUEUE_SIZE:true
+      --queryGraph BASEDIRHERE/EdgeWISE-Benchmarks/query_graphs/stats.yaml
+  - name: LACHESIS-MOD-RT
+    args: ''
+    spe_command: "{storm_jar} jar {query_jar} -Dname=Storm {class_name} L {topology_name} {dataset_filename} 1 1 {topology_output_dir} {query_properties} {topology_name} {stream_length} {num_workers} 1 --rate {rate} --statisticsFolder {statistics_folder} {extra_args}"
+    scheduler_command: >
+      sudo java -Dname=Lachesis -cp ./lachesis-mod/lachesis-0.1.jar
+      io.palyvos.scheduler.integration.StormIntegration --cgroupPolicy one --translator real-time --minPriority 1 
+      --maxPriority 99  --statisticsFolder {statistics_folder} --statisticsHost {statistics_host} --logarithmic --period 1000 --cgroupPeriod 1000
+      --worker IoTStatsTopology --policy metric:INPUT_OUTPUT_EXTERNAL_QUEUE_SIZE:true
+      --queryGraph BASEDIRHERE/EdgeWISE-Benchmarks/query_graphs/stats.yaml
 
-topology_name: ETL
+topology_name: STATS
 storm_jar: BASEDIRHERE/apache-storm-1.1.0/bin/storm
 storm_edgewise_jar: BASEDIRHERE/apache-storm-edgewise-1.1.0/bin/storm
 query_jar: BASEDIRHERE/EdgeWISE-Benchmarks/modules/storm/target/iot-bm-storm-0.1-jar-with-dependencies.jar
 dataset_filename: SYS_sample_data_senml.csv
 topology_output_dir: BASEDIRHERE/EdgeWISE-Benchmarks/scripts/
-query_properties: etl_topology.properties 
+query_properties: stats_with_vis_topo.properties
 stream_length: 2000000
 num_workers: 1
 
