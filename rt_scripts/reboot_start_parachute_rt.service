@@ -1,0 +1,9 @@
+[Unit]
+Description=Activate real-time setup after reboot.
+
+[Service]
+Type=simple
+ExecStart=/home/fausto/lachesis-experiments/scheduling-queries/fausto/rt_scripts/set_rt.sh
+
+[Install]
+WantedBy=multi-user.target
