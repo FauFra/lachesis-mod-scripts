@@ -7,4 +7,4 @@ function usage() {
 
 [[ -z $1 ]] && usage
 
-./fausto/reproduce/plot.py --plots qs-comparison --path "data/output/$1" 2>&1 | tee data/output/$1/config
+./fausto/reproduce/plot.py --plots qs-comparison --path "data/output/$1" 2>&1 | tee data/output/$1/config.txt

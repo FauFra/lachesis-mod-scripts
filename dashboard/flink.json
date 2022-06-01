@@ -21,7 +21,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 2,
+  "id": 3,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -520,180 +520,12 @@
       "type": "timeseries"
     },
     {
-      "description": "External queue size",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 27
-      },
-      "id": 65,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "graphite",
-            "uid": "Iwym5PWgz"
-          },
-          "refId": "A",
-          "target": "Storm.*.*.*.*.*.external-queue-size.*",
-          "textEditor": true
-        }
-      ],
-      "title": "External queue",
-      "type": "timeseries"
-    },
-    {
-      "description": "External rate",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 27
-      },
-      "id": 67,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom"
-        },
-        "tooltip": {
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "targets": [
-        {
-          "datasource": {
-            "type": "graphite",
-            "uid": "lJnoTsL7k"
-          },
-          "refId": "A",
-          "target": "Storm.*.*.*.*.*.external-rate.*",
-          "textEditor": true
-        }
-      ],
-      "title": "External rate",
-      "type": "timeseries"
-    },
-    {
       "collapsed": false,
       "gridPos": {
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 35
+        "y": 27
       },
       "id": 36,
       "panels": [],
@@ -781,7 +613,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 36
+        "y": 28
       },
       "id": 12,
       "options": {
@@ -803,7 +635,7 @@
           },
           "refCount": 0,
           "refId": "A",
-          "target": "Storm.*.*.*.source.*.emit-count.default.value",
+          "target": "*.taskmanager.*.*.Source:-source.*.numRecordsOutPerSecond.m1_rate",
           "textEditor": true
         },
         {
@@ -814,7 +646,7 @@
           "hide": false,
           "refCount": 0,
           "refId": "B",
-          "target": "alias(movingAverage(Storm.*.*.*.source.*.emit-count.default.value, 5), \"moving avg 5 sec\")",
+          "target": "alias(movingAverage(*.taskmanager.*.*.Source:-source.*.numRecordsOutPerSecond.m1_rate, 5), \"moving avg 5 sec\")",
           "textEditor": true
         },
         {
@@ -825,7 +657,7 @@
           "hide": false,
           "refCount": 0,
           "refId": "C",
-          "target": "alias(movingAverage(Storm.*.*.*.source.*.emit-count.default.value, 30), \"moving avg 30 sec\")",
+          "target": "alias(movingAverage(*.taskmanager.*.*.Source:-source.*.numRecordsOutPerSecond.m1_rate, 30), \"moving avg 30 sec\")",
           "textEditor": true
         }
       ],
@@ -888,7 +720,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 36
+        "y": 28
       },
       "id": 18,
       "options": {
@@ -909,7 +741,7 @@
             "uid": "lJnoTsL7k"
           },
           "refId": "A",
-          "target": "Storm.*.*.*.sink.*.execute-count.*.value",
+          "target": "*.taskmanager.*.*.Sink:-sink.*.numRecordsInPerSecond.m1_rate",
           "textEditor": true
         }
       ],
@@ -944,7 +776,7 @@
         "h": 9,
         "w": 12,
         "x": 0,
-        "y": 45
+        "y": 37
       },
       "id": 59,
       "options": {
@@ -968,7 +800,7 @@
           },
           "refCount": 0,
           "refId": "A",
-          "target": "Storm.*.*.*.source.*.emit-count.default.value | aggregateLine('avg') | aliasByNode(4,6)",
+          "target": "*.taskmanager.*.*.Source:-source.*.numRecordsOutPerSecond.m1_rate | aggregateLine('avg') | aliasByNode(4,6)",
           "textEditor": true
         }
       ],
@@ -1003,7 +835,7 @@
         "h": 9,
         "w": 12,
         "x": 12,
-        "y": 45
+        "y": 37
       },
       "id": 60,
       "options": {
@@ -1026,7 +858,7 @@
             "uid": "lJnoTsL7k"
           },
           "refId": "A",
-          "target": "Storm.*.*.*.sink.*.execute-count.*.value | aggregateLine('avg') | aliasByNode(4,7)",
+          "target": "*.taskmanager.*.*.Sink:-sink.*.numRecordsInPerSecond.m1_rate | aggregateLine('avg') | aliasByNode(4,7)",
           "textEditor": true
         }
       ],
@@ -1039,7 +871,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 54
+        "y": 46
       },
       "id": 40,
       "panels": [],
@@ -1127,7 +959,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 55
+        "y": 47
       },
       "id": 20,
       "options": {
@@ -1150,7 +982,7 @@
           },
           "refCount": 0,
           "refId": "A",
-          "target": "Storm.*.*.*.*.*.total-latency.*",
+          "target": "*.taskmanager.*.*.*.*.latency",
           "textEditor": true
         },
         {
@@ -1161,7 +993,7 @@
           "hide": false,
           "refCount": 0,
           "refId": "B",
-          "target": "alias(movingAverage(Storm.*.*.*.*.*.total-latency.*, 5), \"moving avg 5 sec\")",
+          "target": "alias(movingAverage(*.taskmanager.*.*.*.*.latency, 5), \"moving avg 5 sec\")",
           "textEditor": true
         },
         {
@@ -1172,7 +1004,7 @@
           "hide": false,
           "refCount": 0,
           "refId": "C",
-          "target": "alias(movingAverage(Storm.*.*.*.*.*.total-latency.*, 30), \"moving avg 30 sec\")",
+          "target": "alias(movingAverage(*.taskmanager.*.*.*.*.latency, 30), \"moving avg 30 sec\")",
           "textEditor": true
         }
       ],
@@ -1260,7 +1092,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 55
+        "y": 47
       },
       "id": 22,
       "options": {
@@ -1282,7 +1114,7 @@
           },
           "refCount": 0,
           "refId": "A",
-          "target": "Storm.*.*.*.*.*.total-latency-ext.*",
+          "target": "*.taskmanager.*.*.*.*.latency-ext",
           "textEditor": true
         },
         {
@@ -1293,7 +1125,7 @@
           "hide": false,
           "refCount": 0,
           "refId": "B",
-          "target": "alias(movingAverage(Storm.*.*.*.*.*.total-latency-ext.*,5), \"moving avg 5 sec\")",
+          "target": "alias(movingAverage(*.taskmanager.*.*.*.*.latency-ext,5), \"moving avg 5 sec\")",
           "textEditor": true
         },
         {
@@ -1304,7 +1136,7 @@
           "hide": false,
           "refCount": 0,
           "refId": "C",
-          "target": "alias(movingAverage(Storm.*.*.*.*.*.total-latency-ext.*,30), \"moving avg 30 sec\")",
+          "target": "alias(movingAverage(*.taskmanager.*.*.*.*.latency-ext,30), \"moving avg 30 sec\")",
           "textEditor": true
         }
       ],
@@ -1317,7 +1149,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 63
+        "y": 55
       },
       "id": 38,
       "panels": [],
@@ -1380,7 +1212,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 64
+        "y": 56
       },
       "id": 24,
       "options": {
@@ -1401,7 +1233,7 @@
             "uid": "lJnoTsL7k"
           },
           "refId": "A",
-          "target": "substr(Storm.*.*.*.*.*.receive.population.value, 4, 5)",
+          "target": "substr(*.taskmanager.*.*.*.*.Shuffle.Netty.Input.Buffers.inputQueueLength, 4, 5)",
           "textEditor": true
         }
       ],
@@ -1463,7 +1295,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 64
+        "y": 56
       },
       "id": 14,
       "options": {
@@ -1485,7 +1317,7 @@
             "uid": "lJnoTsL7k"
           },
           "refId": "A",
-          "target": "substr(Storm.*.*.*.*.*.sendqueue.population.value, 4, 5)",
+          "target": "substr(*.taskmanager.*.*.*.*.Shuffle.Netty.Output.Buffers.outputQueueLength, 4, 5)",
           "textEditor": true
         }
       ],
@@ -1548,7 +1380,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 72
+        "y": 64
       },
       "id": 51,
       "options": {
@@ -1569,7 +1401,7 @@
             "uid": "lJnoTsL7k"
           },
           "refId": "A",
-          "target": "substr(movingAverage(Storm.*.*.*.*.*.receive.population.value, 30), 4, 5)",
+          "target": "substr(movingAverage(*.taskmanager.*.*.*.*.Shuffle.Netty.Input.Buffers.inputQueueLength, 30), 4, 5)",
           "textEditor": true
         }
       ],
@@ -1632,7 +1464,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 72
+        "y": 64
       },
       "id": 58,
       "options": {
@@ -1653,7 +1485,7 @@
             "uid": "lJnoTsL7k"
           },
           "refId": "A",
-          "target": "substr(movingAverage(Storm.*.*.*.*.*.sendqueue.population.value, 30), 4, 5)",
+          "target": "substr(movingAverage(*.taskmanager.*.*.*.*.Shuffle.Netty.Output.Buffers.outputQueueLength, 30), 4, 5)",
           "textEditor": true
         }
       ],
@@ -1666,7 +1498,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 80
+        "y": 72
       },
       "id": 47,
       "panels": [],
@@ -1728,7 +1560,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 81
+        "y": 73
       },
       "id": 45,
       "options": {
@@ -1750,7 +1582,7 @@
           },
           "refCount": 0,
           "refId": "A",
-          "target": "Storm.*.utilization.memory.mb",
+          "target": "flink.*.utilization.memory.mb",
           "textEditor": true
         },
         {
@@ -1761,7 +1593,7 @@
           "hide": false,
           "refCount": 0,
           "refId": "B",
-          "target": "alias(movingAverage(Storm.*.utilization.memory.mb, 5), \"moving avg 5 sec\")",
+          "target": "alias(movingAverage(flink.*.utilization.memory.mb, 5), \"moving avg 5 sec\")",
           "textEditor": true
         },
         {
@@ -1772,11 +1604,11 @@
           "hide": false,
           "refCount": 0,
           "refId": "C",
-          "target": "alias(movingAverage(Storm.*.utilization.memory.mb, 30), \"moving avg 30 sec\")",
+          "target": "alias(movingAverage(flink.*.utilization.memory.mb, 30), \"moving avg 30 sec\")",
           "textEditor": true
         }
       ],
-      "title": "Storm Memory",
+      "title": "Flink Memory",
       "type": "timeseries"
     },
     {
@@ -1834,7 +1666,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 81
+        "y": 73
       },
       "id": 50,
       "options": {
@@ -1891,7 +1723,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 89
+        "y": 81
       },
       "id": 42,
       "panels": [],
@@ -1953,7 +1785,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 90
+        "y": 82
       },
       "id": 44,
       "options": {
@@ -1975,7 +1807,7 @@
           },
           "refCount": 0,
           "refId": "A",
-          "target": "Storm.*.utilization.cpu.percent",
+          "target": "flink.*.utilization.cpu.percent",
           "textEditor": true
         },
         {
@@ -1986,7 +1818,7 @@
           "hide": false,
           "refCount": 0,
           "refId": "B",
-          "target": "alias(movingAverage(Storm.*.utilization.cpu.percent, 5), \"moving avg 5 sec\")",
+          "target": "alias(movingAverage(flink.*.utilization.cpu.percent, 5), \"moving avg 5 sec\")",
           "textEditor": true
         },
         {
@@ -1997,7 +1829,7 @@
           "hide": false,
           "refCount": 0,
           "refId": "C",
-          "target": "alias(movingAverage(Storm.*.utilization.cpu.percent, 30), \"moving avg 30 sec\")",
+          "target": "alias(movingAverage(flink.*.utilization.cpu.percent, 30), \"moving avg 30 sec\")",
           "textEditor": true
         }
       ],
@@ -2059,7 +1891,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 90
+        "y": 82
       },
       "id": 48,
       "options": {
@@ -2190,7 +2022,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 98
+        "y": 90
       },
       "id": 49,
       "options": {
@@ -2247,7 +2079,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 106
+        "y": 98
       },
       "id": 32,
       "panels": [],
@@ -2310,7 +2142,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 107
+        "y": 99
       },
       "id": 30,
       "options": {
@@ -2331,7 +2163,7 @@
             "uid": "lJnoTsL7k"
           },
           "refId": "A",
-          "target": "Storm.*.*.*.*.*.execute-count.*.value",
+          "target": "*.taskmanager.*.*.*.*.numRecordsOutPerSecond.m1_rate",
           "textEditor": true
         }
       ],
@@ -2394,7 +2226,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 107
+        "y": 99
       },
       "id": 28,
       "options": {
@@ -2415,7 +2247,7 @@
             "uid": "lJnoTsL7k"
           },
           "refId": "A",
-          "target": "Storm.*.*.*.*.*.emit-count.*.value",
+          "target": "*.taskmanager.*.*.*.*.numRecordsInPerSecond.m1_rate",
           "textEditor": true
         }
       ],
@@ -2450,8 +2282,8 @@
     ]
   },
   "timezone": "",
-  "title": "Storm Dashboard",
-  "uid": "43pByQY7z",
-  "version": 12,
+  "title": "Flink Dashboard",
+  "uid": "43pByQY7zF",
+  "version": 2,
   "weekStart": ""
 }

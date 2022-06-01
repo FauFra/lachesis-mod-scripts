@@ -6,7 +6,7 @@ mkdir lachesis-experiments
 cd lachesis-experiments
 git clone https://github.com/dmpalyvos/lachesis-evaluation scheduling-queries
 
-mv ../fausto ./scheduling-queries
+cp -r ../fausto ./scheduling-queries
 
 #update path
 current_directory=$(pwd)
@@ -17,7 +17,7 @@ echo "[INFO] Updating paths ($current_directory)"
 ./update_paths.sh $current_directory
 
 #python requirements
- read -p "Do you want install minimal requirements? [y/n]: " minimal_requirement
+ read -p "> Do you want install minimal requirements? [y/n]: " minimal_requirement
 
  if [[ $minimal_requirement == "Y" ]] || [[ $minimal_requirement == "y" ]];
  then
@@ -54,7 +54,7 @@ then
 	find . -path "$script" -exec perl -pi -e "s/java-8-openjdk-armhf/java-8-openjdk-amd64/g" {} +
 fi
 
-read -p "Do you want disable taskset? (It is recommended to disable it if you are not on an odroid) [y/n]: " taskset
+read -p "> Do you want disable taskset? (It is recommended to disable it if you are not on an odroid) [y/n]: " taskset
 
 if [[ $taskset == "Y" ]] || [[ $taskset == "y" ]]; 
 then
@@ -74,3 +74,5 @@ read -p "Enter REMOTE_GRAPHITE_HOSTNAME: " remote_name
 
 echo "[INFO] Code compilation"
 ./auto_setup.sh $spe_name $remote_name
+
+rm -rf ~/fausto
