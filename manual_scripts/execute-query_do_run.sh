@@ -3,10 +3,13 @@
 set -e
 
 function cleanup(){
+  echo "> Cleanup"
   for ((i=0; i<${#EXIT_COMMANDS[@]}; i++))
   do
     ${EXIT_COMMANDS[$i]}
   done
+
+  exit 0
 }
 
 function usage() {
@@ -32,13 +35,13 @@ function setup_kafka(){
   echo $KAFKA_STOP_COMMAND
   eval $KAFKA_STOP_COMMAND
 
+  EXIT_COMMANDS+=("eval $KAFKA_STOP_COMMAND")
+
   sleep 3
 
   echo "> Starting kafka on $KAFKA_HOSTNAME"
   echo $KAFKA_START_COMMAND
   eval $KAFKA_START_COMMAND
-
-  EXIT_COMMANDS+=("eval $KAFKA_STOP_COMMAND")
 }
 
 function setup_flink_cluster(){
@@ -49,13 +52,13 @@ function setup_flink_cluster(){
   echo "> Stopping flink cluster"
   echo $STOP_CLUSTER
   eval "$STOP_CLUSTER"
+  EXIT_COMMANDS+=("eval $STOP_CLUSTER")
   sleep 5
   # Make absolutely sure that there is no leftover TaskManager
   pgrep -f "org.apache.flink.runtime.taskexecutor.TaskManagerRunner" | xargs -I {} kill -9 {}
   echo "> Starting flink cluster"
   echo $START_CLUSTER
   eval "$START_CLUSTER"
-  EXIT_COMMANDS+=("eval $STOP_CLUSTER")
   sleep 5
 
   eval "$FORCE_GC_CMD" > /dev/null
@@ -109,7 +112,7 @@ TASKSET_CORE="0-3"
 EXIT_COMMANDS=()
 
 BASE_EXPERIMENT_FOLDER="BASEDIRHERE/scheduling-queries/data/output"
-EXPERIMENT_FOLDER="$BASE_EXPERIMENT_FOLDER/manual_statistics/Storm/1"
+EXPERIMENT_FOLDER="$BASE_EXPERIMENT_FOLDER/manual_statistics/csv"
 
 while [ $# -gt 0 ]; do
     case $1 in    
@@ -210,17 +213,9 @@ ssh $STAT_HOSTNAME "BASEDIRHERE/scheduling-queries/scripts/clear_graphite.sh || 
 echo "> Stopping utilization scripts..."
 UTILIZATION_SCRIPT="./scripts/utilization-"$SPE".sh"
 UTILIZATION_COMMAND="pkill -f $UTILIZATION_SCRIPT"
-$UTILIZATION_COMMAND || true
 EXIT_COMMANDS+=("$UTILIZATION_COMMAND")
+$UTILIZATION_COMMAND || true
 
-
-if [ ! -d "$EXPERIMENT_FOLDER" ]; then
-  echo "> Creating experiment folder at $EXPERIMENT_FOLDER"
-  mkdir -p $EXPERIMENT_FOLDER
-else
-  echo "> Cleaning experiment folder $EXPERIMENT_FOLDER"
-  sudo rm -rf $EXPERIMENT_FOLDER/*
-fi
 
 #Script for storm statistics (displayed in grafana)
 echo "> Executing $UTILIZATION_SCRIPT $STAT_HOSTNAME"
@@ -256,11 +251,12 @@ fi
 
 if [[ $SPE == flink ]]; then
   echo "> Starting flink job stopper"
+  EXIT_COMMANDS+=("pkill -f flinkJobStopper")
   python3 "scripts/flinkJobStopper.py" "$(( $DURATION*60 ))" &
-  EXIT_COMMANDS+=("eval pkill -f flinkJobStopper")
 fi
 
 
 
 printf "> Executing command: %s\n\n" "$COMMAND"
-$COMMAND 2>&1 | tee $EXPERIMENT_FOLDER/etl_out.log
+$COMMAND 
+

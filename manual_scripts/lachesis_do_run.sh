@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# exec > >(tee -i BASEDIRHERE/scheduling-queries/data/output/manual_statistics/Storm/1/lachesis_out.log)
+# exec 2>&1
+
 STATISTICS_HOST=""
 LOG="INFO"
 TRANSLATOR="nice"
@@ -183,4 +186,6 @@ COMMAND="taskset -c $TASKSET_CORE sudo java -Dname=Lachesis -cp ./$LACHESIS_VERS
 
 
 printf "Executing command: %s\n\n" "$COMMAND"
-$COMMAND 2>&1 | tee BASEDIRHERE/scheduling-queries/data/output/manual_statistics/Storm/1/lachesis_out.log
+# $COMMAND 2>&1 | tee BASEDIRHERE/scheduling-queries/data/output/manual_statistics/Storm/1/lachesis_out.log
+$COMMAND
+
