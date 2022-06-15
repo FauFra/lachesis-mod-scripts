@@ -245,6 +245,10 @@ if [[ $SPE == storm ]]; then
 elif [[ $SPE == flink ]]; then
   if [[ $QUERY == LinearRoad ]]; then
     COMMAND="$BASE_COMMAND BASEDIRHERE/flink-1.11.2/bin/flink run --class LinearRoad.LinearRoad BASEDIRHERE/scheduling-queries/flink_queries/LinearRoad/target/LinearRoad-1.0.jar --time $(( $DURATION*60 )) --statisticsFolder $EXPERIMENT_FOLDER --kafkaHost $KAFKA_HOSTNAME:9092 --conf BASEDIRHERE/scheduling-queries/flink_queries/LinearRoad/Configurations/seqs_kafka.json  --rate $RATE  --sampleLatency true"
+  elif [[ $QUERY == VoipStream ]]; then
+    COMMAND="$BASE_COMMAND BASEDIRHERE/flink-1.11.2/bin/flink run --class VoipStream.VoipStream BASEDIRHERE/scheduling-queries/flink_queries/VoipStream/target/VoipStream-1.0.jar --time $(( $DURATION*60 )) --statisticsFolder $EXPERIMENT_FOLDER --kafkaHost $KAFKA_HOSTNAME:9092 --conf BASEDIRHERE/scheduling-queries/flink_queries/VoipStream/Configurations/seqs_kafka.json  --rate $RATE  --sampleLatency true"
+  else
+    usage
   fi
 
 fi

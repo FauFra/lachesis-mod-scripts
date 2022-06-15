@@ -1,7 +1,9 @@
 #!/bin/bash
 
 function cleanup(){
+  PID=$(pgrep -f execute-query_do_run)
   pkill -f execute-query_do_run
+  wait $PID
   exit 0
 }
 

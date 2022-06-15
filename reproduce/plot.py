@@ -27,7 +27,23 @@ sns.set_style("ticks")
 # Ingore unused data for faster loading
 IGNORED_FILES = ['reads.csv', 'writes.csv']
 # Used to sort variants
-BASIC_VARIANT_ORDER = ['OS', 'LACHESIS', 'LACHESIS-FAST', 'LACHESIS-RT', 'LACHESIS-MOD', 'LACHESIS-NICE', 'LACHESIS-MOD-NICE', 'LACHESIS-MOD-RT', 'LACHESIS-CPUSHARE', 'HAREN', 'EDGEWISE', 'RANDOM']
+BASIC_VARIANT_ORDER = [
+    'OS',
+    'LACHESIS',
+    'LACHESIS-500', 
+    'LACHESIS-250', 
+    'LACHESIS-2000', 
+    'LACHESIS-RT', 
+    'LACHESIS-RT-500',
+    'LACHESIS-MOD', 
+    'LACHESIS-NICE', 
+    'LACHESIS-MOD-NICE', 
+    'LACHESIS-MOD-RT', 
+    'LACHESIS-CPUSHARE', 
+    'HAREN', 
+    'EDGEWISE', 
+    'RANDOM'
+    ]
 # Figures 
 EXPORT_FOLDER='./figures'
 # Discard warmup and cooldown
@@ -70,7 +86,6 @@ def aggregate_rep(parameter, extra_params, aggfunc=np.mean):
     print(parameter)
     with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
         print(test)        
-
 
     return test
 
