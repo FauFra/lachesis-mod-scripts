@@ -8,7 +8,7 @@ dimensions:
     # - 4000
     # - 4500
     # - 5000
-    # - 5500
+    - 5500
     - 6000
 
 
@@ -42,7 +42,7 @@ variants:
   #   scheduler_command: "{base_scheduler_mod_cmd}  --statisticsHost {statistics_host} --policy metric:INPUT_OUTPUT_QUEUE_SIZE:true"
 
 
-base_scheduler_cmd: "sudo java -Dname=Lachesis -cp ./lachesis/lachesis-0.1.jar io.palyvos.scheduler.integration.FlinkIntegration --worker TaskManagerRunner --cgroupPolicy one --minPriority 19 --maxPriority -20 --period 1000 --cgroupPeriod 1000 --log ALL"
+base_scheduler_cmd: "sudo java -Dname=Lachesis -cp ./lachesis/lachesis-0.1.jar io.palyvos.scheduler.integration.FlinkIntegration --worker TaskManagerRunner --cgroupPolicy one --minPriority 19 --maxPriority -20 --period 1000 --cgroupPeriod 1000"
 base_scheduler_mod_cmd: "sudo java -Dname=Lachesis -cp ./lachesis-mod/lachesis-0.1.jar io.palyvos.scheduler.integration.FlinkIntegration --worker TaskManagerRunner --cgroupPolicy one --minPriority 19 --maxPriority -20 --period 1000 --cgroupPeriod 1000"
 base_scheduler_cmd_fast: "sudo java -Dname=Lachesis -cp ./lachesis/lachesis-0.1.jar io.palyvos.scheduler.integration.FlinkIntegration --worker TaskManagerRunner --cgroupPolicy one --minPriority 19 --maxPriority -20 --period 500 --cgroupPeriod 1000"
 flink_cmd: "BASEDIRHERE/flink-1.11.2/bin/flink run --class"

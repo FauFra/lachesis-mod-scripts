@@ -16,10 +16,17 @@ DATE_CODE=$(date +%j_%H%M)
 COMMIT_CODE=$(git rev-parse --short HEAD)
 EXPERIMENT_FOLDER="${COMMIT_CODE}_${DATE_CODE}"
 CURRENT_ODROID=$(echo $(hostname) | tr -dc '0-9')
+PARACHUTE_RT="sudo pkill -f start_parachute_rt.sh"
 
 ../flink-1.11.2/bin/stop-cluster.sh
 
-./scripts/run.py ./fausto/scripts/templates/FlinkLinearRoadKafka.yaml -d "$DURATION" -r "$REPS" --statisticsHost "$(hostname)" --kafkaHost "$KAFKA_HOST" -c "$DATE_CODE" --sampleLatency true
+echo "> Starting parachute_rt script"
+sudo chrt -r 99 ./fausto/rt_scripts/start_parachute_rt.sh --mins $((($DURATION*$REPS*3*7)+240)) # 240 = additional 4 hours | 3 = OS, LACHESIS, LACHESIS-MOD | 8 = rate range 
+trap "$PARACHUTE_RT" EXIT
+
+./scripts/run.py ./fausto/scripts/templates/FlinkVoipStreamKafkaRT.yaml -d "$DURATION" -r "$REPS" --statisticsHost "$(hostname)" --kafkaHost "$KAFKA_HOST" -c "$DATE_CODE" --sampleLatency true
+
+eval $PARACHUTE_RT
 
 ssh -t pianosa "cd ~/results_experiments && ./local_scripts/download_odroid_pianosa.sh --odroid $CURRENT_ODROID --folder $EXPERIMENT_FOLDER"
 

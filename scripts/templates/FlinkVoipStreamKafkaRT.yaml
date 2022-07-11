@@ -17,23 +17,23 @@ queries:
     reference: VoipStream.VoipStream
 
 variants:
-  # - name: OS
-  #   spe_command: "{flink_cmd} {class_name} {query_jar}  --time {duration_seconds} --statisticsFolder {statistics_folder} --kafkaHost {kafka_host}:9092 --conf {query_config_file} {args} {extra_args}"
-  #   kafka_start_command: "{ssh_cli} {kafka_host} 'BASEDIRHERE/scheduling-queries/kafka-source/start-source.sh {args} --configFile {query_config_file} --graphiteHost {statistics_host}  &>> {kafka_command_log} &'"
-  #   kafka_stop_command: "{ssh_cli} {kafka_host} 'pkill -f start-source.sh &>> {kafka_command_log} &'"
-  #   args: ''
-  - name: LACHESIS-BUFF
+  - name: OS
+    spe_command: "{flink_cmd} {class_name} {query_jar}  --time {duration_seconds} --statisticsFolder {statistics_folder} --kafkaHost {kafka_host}:9092 --conf {query_config_file} {args} {extra_args}"
+    kafka_start_command: "{ssh_cli} {kafka_host} 'BASEDIRHERE/scheduling-queries/kafka-source/start-source.sh {args} --configFile {query_config_file} --graphiteHost {statistics_host}  &>> {kafka_command_log} &'"
+    kafka_stop_command: "{ssh_cli} {kafka_host} 'pkill -f start-source.sh &>> {kafka_command_log} &'"
+    args: ''
+  - name: LACHESIS-RT
     args: ''
     kafka_start_command: "{ssh_cli} {kafka_host} 'BASEDIRHERE/scheduling-queries/kafka-source/start-source.sh {args} --configFile {query_config_file} --graphiteHost {statistics_host}  &>> {kafka_command_log} &'"
     kafka_stop_command: "{ssh_cli} {kafka_host} 'pkill -f start-source.sh &>> {kafka_command_log} &'"
     spe_command: "{flink_cmd} {class_name} {query_jar} --time {duration_seconds} --statisticsFolder {statistics_folder} --kafkaHost {kafka_host}:9092 --conf {query_config_file} {args} {extra_args}"
     scheduler_command: "{base_scheduler_cmd}  --statisticsHost {statistics_host} --policy metric:TASK_QUEUE_SIZE_FROM_SUBTASK_DATA:true"
-  # - name: LACHESIS-MOD
-  #   args: ''
-  #   kafka_start_command: "{ssh_cli} {kafka_host} 'BASEDIRHERE/scheduling-queries/kafka-source/start-source.sh {args} --configFile {query_config_file} --graphiteHost {statistics_host}  &>> {kafka_command_log} &'"
-  #   kafka_stop_command: "{ssh_cli} {kafka_host} 'pkill -f start-source.sh &>> {kafka_command_log} &'"
-  #   spe_command: "{flink_cmd} {class_name} {query_jar} --time {duration_seconds} --statisticsFolder {statistics_folder} --kafkaHost {kafka_host}:9092 --conf {query_config_file} {args} {extra_args}"
-  #   scheduler_command: "{base_scheduler_mod_cmd}  --statisticsHost {statistics_host} --policy metric:INPUT_OUTPUT_QUEUE_SIZE:true"
+  - name: LACHESIS-MOD-RT
+    args: ''
+    kafka_start_command: "{ssh_cli} {kafka_host} 'BASEDIRHERE/scheduling-queries/kafka-source/start-source.sh {args} --configFile {query_config_file} --graphiteHost {statistics_host}  &>> {kafka_command_log} &'"
+    kafka_stop_command: "{ssh_cli} {kafka_host} 'pkill -f start-source.sh &>> {kafka_command_log} &'"
+    spe_command: "{flink_cmd} {class_name} {query_jar} --time {duration_seconds} --statisticsFolder {statistics_folder} --kafkaHost {kafka_host}:9092 --conf {query_config_file} {args} {extra_args}"
+    scheduler_command: "{base_scheduler_mod_cmd}  --statisticsHost {statistics_host} --policy metric:INPUT_OUTPUT_QUEUE_SIZE:true"
   # - name: RANDOM
   #   args: ''
   #   kafka_start_command: "{ssh_cli} {kafka_host} 'BASEDIRHERE/scheduling-queries/kafka-source/start-source.sh {args} --configFile {query_config_file} --graphiteHost {statistics_host}  &>> {kafka_command_log} &'"
@@ -42,8 +42,8 @@ variants:
   #   scheduler_command: "{base_scheduler_cmd}  --statisticsHost {statistics_host} --policy random:true"
 
 
-base_scheduler_cmd: "sudo java -Dname=Lachesis -cp ./lachesis/lachesis-0.1.jar io.palyvos.scheduler.integration.FlinkIntegration --worker TaskManagerRunner --cgroupPolicy one --minPriority 19 --maxPriority -20 --period 1000 --cgroupPeriod 1000"
-base_scheduler_mod_cmd: "sudo java -Dname=Lachesis -cp ./lachesis-mod/lachesis-0.1.jar io.palyvos.scheduler.integration.FlinkIntegration --worker TaskManagerRunner --cgroupPolicy one --minPriority 19 --maxPriority -20 --period 1000 --cgroupPeriod 1000"
+base_scheduler_cmd: "sudo java -Dname=Lachesis -cp ./lachesis/lachesis-0.1.jar io.palyvos.scheduler.integration.FlinkIntegration --worker TaskManagerRunner --cgroupPolicy one --translator real-time --minPriority 1 --maxPriority 99 --period 1000 --cgroupPeriod 1000"
+base_scheduler_mod_cmd: "sudo java -Dname=Lachesis -cp ./lachesis-mod/lachesis-0.1.jar io.palyvos.scheduler.integration.FlinkIntegration --worker TaskManagerRunner --cgroupPolicy one --translator real-time --minPriority 1 --maxPriority 99 --period 1000 --cgroupPeriod 1000"
 flink_cmd: "BASEDIRHERE/flink-1.11.2/bin/flink run --class"
 query_jar: "BASEDIRHERE/scheduling-queries/flink_queries/VoipStream/target/VoipStream-1.0.jar"
 query_config_file: "BASEDIRHERE/scheduling-queries/flink_queries/VoipStream/Configurations/seqs_kafka.json"
