@@ -54,21 +54,6 @@ then
 	find . -path "$script" -exec perl -pi -e "s/java-8-openjdk-armhf/java-8-openjdk-amd64/g" {} +
 fi
 
-read -p "> Do you want disable taskset? (It is recommended to disable it if you are not on an odroid) [y/n]: " taskset
-
-if [[ $taskset == "Y" ]] || [[ $taskset == "y" ]]; 
-then
-	taskset_string_1='FORCE_STORM_TASKSET="pgrep -f Dname=Storm | xargs -I {} taskset -apc 4-7 {}"'
-	taskset_string_1_repl='#FORCE_STORM_TASKSET="pgrep -f Dname=Storm | xargs -I {} taskset -apc 4-7 {}"\nFORCE_STORM_TASKSET=""'
-	taskset_string_2='FORCE_LACHESIS_TASKSET="pgrep -f Dname=Lachesis | xargs -I {} sudo taskset -apc 0-3 {}"'
-	taskset_string_2_repl='#FORCE_LACHESIS_TASKSET="pgrep -f Dname=Lachesis | xargs -I {} sudo taskset -apc 0-3 {}"\nFORCE_LACHESIS_TASKSET=""'
-	script="./scripts/storm_do_run.sh"
-
-	sed -i -e 's/'"$taskset_string_1"'/'"$taskset_string_1_repl"'/g' $script
-	sed -i -e 's/'"$taskset_string_2"'/'"$taskset_string_2_repl"'/g' $script
-	echo "[INFO] Taskset disabled"
-fi
-
 read -p "Enter SPE_LEADER_HOSTNAME: " spe_name
 read -p "Enter REMOTE_GRAPHITE_HOSTNAME: " remote_name
 

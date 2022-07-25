@@ -17,23 +17,23 @@ queries:
     reference: VoipStream.VoipStream
 
 variants:
-  - name: OS
-    spe_command: "{flink_cmd} {class_name} {query_jar}  --time {duration_seconds} --statisticsFolder {statistics_folder} --kafkaHost {kafka_host}:9092 --conf {query_config_file} {args} {extra_args}"
-    kafka_start_command: "{ssh_cli} {kafka_host} 'BASEDIRHERE/scheduling-queries/kafka-source/start-source.sh {args} --configFile {query_config_file} --graphiteHost {statistics_host}  &>> {kafka_command_log} &'"
-    kafka_stop_command: "{ssh_cli} {kafka_host} 'pkill -f start-source.sh &>> {kafka_command_log} &'"
-    args: ''
-  - name: LACHESIS-RT
+  # - name: OS
+  #   spe_command: "{flink_cmd} {class_name} {query_jar}  --time {duration_seconds} --statisticsFolder {statistics_folder} --kafkaHost {kafka_host}:9092 --conf {query_config_file} {args} {extra_args}"
+  #   kafka_start_command: "{ssh_cli} {kafka_host} 'BASEDIRHERE/scheduling-queries/kafka-source/start-source.sh {args} --configFile {query_config_file} --graphiteHost {statistics_host}  &>> {kafka_command_log} &'"
+  #   kafka_stop_command: "{ssh_cli} {kafka_host} 'pkill -f start-source.sh &>> {kafka_command_log} &'"
+  #   args: ''
+  - name: LACHESIS-RT-BUFF
     args: ''
     kafka_start_command: "{ssh_cli} {kafka_host} 'BASEDIRHERE/scheduling-queries/kafka-source/start-source.sh {args} --configFile {query_config_file} --graphiteHost {statistics_host}  &>> {kafka_command_log} &'"
     kafka_stop_command: "{ssh_cli} {kafka_host} 'pkill -f start-source.sh &>> {kafka_command_log} &'"
     spe_command: "{flink_cmd} {class_name} {query_jar} --time {duration_seconds} --statisticsFolder {statistics_folder} --kafkaHost {kafka_host}:9092 --conf {query_config_file} {args} {extra_args}"
     scheduler_command: "{base_scheduler_cmd}  --statisticsHost {statistics_host} --policy metric:TASK_QUEUE_SIZE_FROM_SUBTASK_DATA:true"
-  - name: LACHESIS-MOD-RT
-    args: ''
-    kafka_start_command: "{ssh_cli} {kafka_host} 'BASEDIRHERE/scheduling-queries/kafka-source/start-source.sh {args} --configFile {query_config_file} --graphiteHost {statistics_host}  &>> {kafka_command_log} &'"
-    kafka_stop_command: "{ssh_cli} {kafka_host} 'pkill -f start-source.sh &>> {kafka_command_log} &'"
-    spe_command: "{flink_cmd} {class_name} {query_jar} --time {duration_seconds} --statisticsFolder {statistics_folder} --kafkaHost {kafka_host}:9092 --conf {query_config_file} {args} {extra_args}"
-    scheduler_command: "{base_scheduler_mod_cmd}  --statisticsHost {statistics_host} --policy metric:INPUT_OUTPUT_QUEUE_SIZE:true"
+  # - name: LACHESIS-MOD-RT
+  #   args: ''
+  #   kafka_start_command: "{ssh_cli} {kafka_host} 'BASEDIRHERE/scheduling-queries/kafka-source/start-source.sh {args} --configFile {query_config_file} --graphiteHost {statistics_host}  &>> {kafka_command_log} &'"
+  #   kafka_stop_command: "{ssh_cli} {kafka_host} 'pkill -f start-source.sh &>> {kafka_command_log} &'"
+  #   spe_command: "{flink_cmd} {class_name} {query_jar} --time {duration_seconds} --statisticsFolder {statistics_folder} --kafkaHost {kafka_host}:9092 --conf {query_config_file} {args} {extra_args}"
+  #   scheduler_command: "{base_scheduler_mod_cmd}  --statisticsHost {statistics_host} --policy metric:INPUT_OUTPUT_QUEUE_SIZE:true"
   # - name: RANDOM
   #   args: ''
   #   kafka_start_command: "{ssh_cli} {kafka_host} 'BASEDIRHERE/scheduling-queries/kafka-source/start-source.sh {args} --configFile {query_config_file} --graphiteHost {statistics_host}  &>> {kafka_command_log} &'"

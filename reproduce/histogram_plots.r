@@ -42,9 +42,12 @@ colnames(df) <- c("n", "metric","variant", "rep", "rate", "value")
 df <- split(df, df$metric)
 
 print_pdf <- function(x, title, path, y_label){
+  filter <- c("") #Add here variants to hide
+  
   data <- x %>% group_by(rate,variant) %>% summarise(max = max(value), min = min(value), value = mean(value)) 
   data <- data %>% convert(chr(variant))
   data <- data %>% convert(chr(rate))
+  data <- data[!(data$variant %in% filter),]
 
   print(title)
   print(data)
@@ -67,28 +70,30 @@ print_pdf <- function(x, title, path, y_label){
   labs(title=title, fill="Variant", y=y_label, x="Rate (t/s)")+
   theme(plot.title = element_text(hjust = 0.5, size=19, face='bold')) + 
   geom_errorbar(aes(ymin=min, ymax=max), width=.2, position=position_dodge(.9))+
-  theme(text = element_text(size = 20))
+  theme(text = element_text(size = 20), legend.position="bottom", legend.title= element_blank()) +
+  guides(fill=guide_legend(nrow=2,byrow=TRUE))
 
-  ggsave(filename=paste0(title,"-histogram.pdf"), path=path)
-  ggsave(filename=paste0(title,"-histogram.png"), path=path)
+
+  ggsave(filename=paste0(title,"-histogram.pdf"), path=path, width=8)
+  ggsave(filename=paste0(title,"-histogram.png"), path=path, width=8)
 
 }
 
-aux <- df$latency
+aux <- na.omit(df$latency)
 aux <- aux[aux$rate >= THRESHOLD_LOWER,]
 if(THRESHOLD_UPPER != -1){
   aux <- aux[aux$rate <= THRESHOLD_UPPER,]
 }
 print_pdf(aux, "Latency", PATH, "Latency (secs)")
 
-aux <- df$'end-latency'
+aux <- na.omit(df$'end-latency')
 aux <- aux[aux$rate >= THRESHOLD_LOWER,]
 if(THRESHOLD_UPPER != -1){
   aux <- aux[aux$rate <= THRESHOLD_UPPER,]
 }
 print_pdf(aux, "End-to-end latency", PATH, "Latency (secs)")
 
-aux <- df$throughput
+aux <- na.omit(df$throughput)
 aux <- aux[aux$rate >= THRESHOLD_LOWER,]
 if(THRESHOLD_UPPER != -1){
   aux <- aux[aux$rate <= THRESHOLD_UPPER,]

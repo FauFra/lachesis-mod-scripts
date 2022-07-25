@@ -78,18 +78,30 @@ print_config(){
 }
 
 printHelp(){
-  # printf "Usage: %s --stat <statisticsHost> [OPTIONS]\n" "$0"
-  # printf "OPTIONS:\n"
-  # printf " %s %20s\n" "--stat" "{statisticsHost}"
-  # printf " %s %54s\n" "--log" "{INFO, DEBUG, etc.} (log4j levels, DEFAULT: info)"
-  # printf " %s %48s\n" "--trans" "{rt (real-time thread), nice} (DEFAULT: nice)"
-  echo "--rate [REQUIRED]"
-  echo "--duration [REQUIRED]"
-  echo "--query [REQUIRED]"
-  echo "--kafka-host [REQUIRED for lr|vs]"
-  echo "--spe [REQUIRED for lr|vs]"
-  echo "--stat-host"
-  echo "--java-xmx (GB)"
+  echo "Usage: $0 [REQUIRED params] [OPTIONAL params]
+
+REQUIRED parameters:
+  --rate        rate_value              Specify the input rate.
+
+  --duration    duration_value          Specify the minutes of query execution. 
+                                        Example: 10 for 10 minuts
+
+  --query       {etl | stat | lr | vs}  Specify the query's name to execute.
+
+  --kafka-host  odroid_name             Specify the host name where Kafka is in running. 
+                                        REQUIRED only for LR & STAT
+                                        
+  --spe         {storm | flink}         Specify the SPS to use. 
+                                        REQUIRED only for LR & STAT.
+
+OPTIONAL parameters:
+  --stat-host   odroid_name             Specify the host name where graphite is in running. 
+                                        Use only if graphite is not executed in localhost.
+
+  --java-xmx    java_max_heap           Specify Java max heap size. Only Storm.
+                                        The unit of measurement is in GB.
+
+  "
   exit 1
 }
 

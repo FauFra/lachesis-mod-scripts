@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function usage() {
-    echo "Usage: $0 path_config.txt"
+    echo "Usage: $0 path_config.txt lower_bound_rate (optional) upper_bound_rate (optional)"
     exit 1
 }
 

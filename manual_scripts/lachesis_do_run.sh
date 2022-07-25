@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# exec > >(tee -i BASEDIRHERE/scheduling-queries/data/output/manual_statistics/Storm/1/lachesis_out.log)
-# exec 2>&1
-
 STATISTICS_HOST=""
 LOG="INFO"
 TRANSLATOR="nice"
@@ -23,20 +20,37 @@ usage(){
 }
 
 printHelp(){
-  # printf "Usage: %s --stat <statisticsHost> [OPTIONS]\n" "$0"
-  # printf "OPTIONS:\n"
-  # printf " %s %20s\n" "--stat" "{statisticsHost}"
-  # printf " %s %54s\n" "--log" "{INFO, DEBUG, etc.} (log4j levels, DEFAULT: info)"
-  # printf " %s %48s\n" "--trans" "{rt (real-time thread), nice} (DEFAULT: nice)"
-  # exit 1
-  echo "--stat [REQUIRED]"
-  echo "--query <etl | stat | lr | vs> [REQUIRED]"
-  echo "--metric <io (INPUT_OUTPUT_QUEUE_SIZE) | ioe (INPUT_OUTPUT_EXTERNAL_QUEUE_SIZE) | iok (INPUT_OUTPUT_KAFKA_QUEUE_SIZE) | ie (INPUT_EXTERNAL_QUEUE_SIZE) | ik (INPUT_KAFKA_QUEUE_SIZE) | ts (TASK_QUEUE_SIZE_FROM_SUBTASK_DATA)>"
-  echo "--spe [REQUIRED for lr e vs]"
-  echo "--log"
-  echo "--transl"
-  echo "--period"
-  echo "--mod"
+  echo "Usage: $0 [REQUIRED params] [OPTIONAL params]
+
+REQUIRED parameters:
+  --stat  odroid_name             Specify the host name where graphite is in running.
+
+  --query {etl | stat | lr | vs}  Specify the query's name to be executed.
+
+  --spe   {storm | flink}         Specify the SPS to be used. 
+                                  REQUIRED only for LR & STAT.
+
+OPTIONAL parameters:
+  --metric  {io | ioe | iok | ie | ik | ts} Specify the metric to be used. 
+                                            ts: TASK_QUEUE_SIZE_FROM_SUBTASK_DATA (Default)
+                                            io: INPUT_OUTPUT_QUEUE_SIZE
+                                            ik: INPUT_KAFKA_QUEUE_SIZE (LR & VS)
+                                            ie: INPUT_EXTERNAL_QUEUE_SIZE (ETL & VS)
+                                            iok: INPUT_OUTPUT_KAFKA_QUEUE_SIZE (LR & VS) 
+                                            ioe: INPUT_OUTPUT_EXTERNAL_QUEUE_SIZE (ETL & STAT)
+
+  --log     {INFO | DEBUG | etc.}           Specify log4j logging level. 
+                                            Default: INFO.
+
+  --transl  {nc | rt}                       Specify the translator to use.
+                                            nc: nice translator (Default)
+                                            rt: real-time translator
+  
+  --period  execution_frequency             Specify Lachesis execution frequency in mills. 
+                                            Default: 1000.
+
+  --mod                                     Use this flag to execute Lachesis-MOD instead of Lachesis.
+  "
   exit 1
 }
 
