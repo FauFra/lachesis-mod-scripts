@@ -19,6 +19,6 @@ CURRENT_ODROID=$(echo $(hostname) | tr -dc '0-9')
 
 ../flink-1.11.2/bin/stop-cluster.sh
 
-./scripts/run.py ./fausto/scripts/templates/FlinkLinearRoadKafkaFast.yaml -d "$DURATION" -r "$REPS" --statisticsHost "$(hostname)" --kafkaHost "$KAFKA_HOST" -c "$DATE_CODE" --sampleLatency true
+./scripts/run.py ./lachesis-mod-scripts/scripts/templates/FlinkLinearRoadKafkaFast.yaml -d "$DURATION" -r "$REPS" --statisticsHost "$(hostname)" --kafkaHost "$KAFKA_HOST" -c "$DATE_CODE" --sampleLatency true
 
 ssh -t pianosa "cd ~/results_experiments && ./local_scripts/download_odroid_pianosa.sh --odroid $CURRENT_ODROID --folder $EXPERIMENT_FOLDER"

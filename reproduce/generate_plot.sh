@@ -7,6 +7,6 @@ function usage() {
 
 [[ -z $1 ]] && usage
 
-./fausto/reproduce/plot.py --plots qs-comparison --path "data/output/$1" 2>&1 | tee data/output/$1/config.txt
+./lachesis-mod-scripts/reproduce/plot.py --plots qs-comparison --path "data/output/$1" 2>&1 | tee data/output/$1/config.txt
 
-./fausto/reproduce/r_plots.sh "data/output/$1"
+./lachesis-mod-scripts/reproduce/r_plots.sh "data/output/$1"

@@ -6,7 +6,7 @@ mkdir lachesis-experiments
 cd lachesis-experiments
 git clone https://github.com/dmpalyvos/lachesis-evaluation scheduling-queries
 
-cp -r ../fausto ./scheduling-queries
+cp -r ../lachesis-mod-scripts ./scheduling-queries
 
 #update path
 current_directory=$(pwd)
@@ -60,4 +60,4 @@ read -p "Enter REMOTE_GRAPHITE_HOSTNAME: " remote_name
 echo "[INFO] Code compilation"
 ./auto_setup.sh $spe_name $remote_name
 
-rm -rf ~/fausto
+rm -rf ~/lachesis-mod-scripts

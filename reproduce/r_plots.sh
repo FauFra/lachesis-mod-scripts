@@ -37,4 +37,4 @@ else
     threshold=${rates[$threshold_index]}
 fi
 echo "> Generating histogram plots in $PATH_CONFIG (Threshold: [$threshold, $3])"
-Rscript ./fausto/reproduce/histogram_plots.r $PATH_CONFIG $threshold $3
+Rscript ./lachesis-mod-scripts/reproduce/histogram_plots.r $PATH_CONFIG $threshold $3

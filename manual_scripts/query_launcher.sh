@@ -23,7 +23,7 @@ echo
 
 trap cleanup EXIT
 
-./fausto/manual_scripts/execute-query_do_run.sh $@ 2>&1 | tee ./data/output/manual_statistics/log/query_out.log &
+./lachesis-mod-scripts/manual_scripts/execute-query_do_run.sh $@ 2>&1 | tee ./data/output/manual_statistics/log/query_out.log &
 
 PID=$!
 wait $PID

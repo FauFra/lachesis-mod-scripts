@@ -18,10 +18,10 @@ PARACHUTE_RT="sudo pkill -f start_parachute_rt.sh"
 
 eval $PARACHUTE_RT
 echo "> Starting parachute_rt script"
-sudo chrt -r 99 ./fausto/rt_scripts/start_parachute_rt.sh --mins $((($DURATION*$REPS*3*11)+240)) # 240 = additional 4 hours | 3 = OS, LACHESIS, LACHESIS-MOD | 11 = rate range 
+sudo chrt -r 99 ./lachesis-mod-scripts/rt_scripts/start_parachute_rt.sh --mins $((($DURATION*$REPS*3*11)+240)) # 240 = additional 4 hours | 3 = OS, LACHESIS, LACHESIS-MOD | 11 = rate range 
 trap "$PARACHUTE_RT" EXIT
 
-./scripts/run.py ./fausto/scripts/templates/StormStatNiceRT.yaml -d "$DURATION" -r "$REPS" --statisticsHost "$(hostname)" -c "$DATE_CODE"
+./scripts/run.py ./lachesis-mod-scripts/scripts/templates/StormStatNiceRT.yaml -d "$DURATION" -r "$REPS" --statisticsHost "$(hostname)" -c "$DATE_CODE"
 
 eval $PARACHUTE_RT
 

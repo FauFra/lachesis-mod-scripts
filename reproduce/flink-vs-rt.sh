@@ -21,10 +21,10 @@ PARACHUTE_RT="sudo pkill -f start_parachute_rt.sh"
 ../flink-1.11.2/bin/stop-cluster.sh
 
 echo "> Starting parachute_rt script"
-sudo chrt -r 99 ./fausto/rt_scripts/start_parachute_rt.sh --mins $((($DURATION*$REPS*3*7)+240)) # 240 = additional 4 hours | 3 = OS, LACHESIS, LACHESIS-MOD | 8 = rate range 
+sudo chrt -r 99 ./lachesis-mod-scripts/rt_scripts/start_parachute_rt.sh --mins $((($DURATION*$REPS*3*7)+240)) # 240 = additional 4 hours | 3 = OS, LACHESIS, LACHESIS-MOD | 8 = rate range 
 trap "$PARACHUTE_RT" EXIT
 
-./scripts/run.py ./fausto/scripts/templates/FlinkVoipStreamKafkaRT.yaml -d "$DURATION" -r "$REPS" --statisticsHost "$(hostname)" --kafkaHost "$KAFKA_HOST" -c "$DATE_CODE" --sampleLatency true
+./scripts/run.py ./lachesis-mod-scripts/scripts/templates/FlinkVoipStreamKafkaRT.yaml -d "$DURATION" -r "$REPS" --statisticsHost "$(hostname)" --kafkaHost "$KAFKA_HOST" -c "$DATE_CODE" --sampleLatency true
 
 eval $PARACHUTE_RT
 
