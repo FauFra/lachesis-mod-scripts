@@ -1,4 +1,0 @@
-./bin/kafka-run-class.sh kafka.tools.JmxTool --object-name kafka.consumer:type=consumer-fetch-manager-metrics,client-id=prova
-
-bin/kafka-run-class.sh kafka.admin.ConsumerGroupCommand --group experiment --bootstrap-server localhost:9092 --describe 
-./bin/kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list localhost:9092 --topic experiment

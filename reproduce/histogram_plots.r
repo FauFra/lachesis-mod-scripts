@@ -34,7 +34,6 @@ if(length(args) > 2){
 }
 
 
-# df <- read.csv(file = "/home/fausto/FLINK_RT/pdf/data.csv", header=FALSE )
 df <- read.csv(file = DATA_FILE, header=FALSE )
 colnames(df) <- c("n", "metric","variant", "rep", "rate", "value")
 
@@ -63,7 +62,7 @@ print_pdf <- function(x, title, path, y_label){
   ggplot(data, aes(fill=variant, y=value, x=rate, ymax=max+0.1)) + 
     geom_bar(position="dodge", stat="identity", colour='black')+
   geom_text(
-    aes(y=max, x=rate, label = sprintf("%1.2f",value), group = variant),
+    aes(y=max, x=rate, label = sprintf("%1.2f",value), group = variant), #change max value to change label position
     position = position_dodge(width = 1),
     vjust = -1, size = 5
   ) + 

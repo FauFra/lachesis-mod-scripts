@@ -54,7 +54,7 @@ if [[ $arch == "x86_64" ]]
 then
 	# script="./scripts/storm_do_run.sh"
 	
-	echo "[INFO] Updated JAVA_HOME in $script"
+	echo "[INFO] Updated JAVA_HOME variable"
 	find . -path "*do_run.sh" -exec perl -pi -e "s/java-8-openjdk-armhf/java-8-openjdk-amd64/g" {} +
 fi
 
