@@ -4,6 +4,8 @@ set -e
 
 mkdir lachesis-experiments
 cd lachesis-experiments
+
+echo "[INFO] Downloading lachesis-evaluation"
 git clone https://github.com/dmpalyvos/lachesis-evaluation scheduling-queries
 
 cp -r ../lachesis-mod-scripts ./scheduling-queries
@@ -15,6 +17,8 @@ current_directory="${current_directory//"/"/"\/"}"
 cd ~/lachesis-experiments/scheduling-queries
 echo "[INFO] Updating paths ($current_directory)"
 ./update_paths.sh $current_directory
+
+
 
 #python requirements
  read -p "> Do you want install minimal requirements? [y/n]: " minimal_requirement
@@ -48,10 +52,10 @@ arch=$(uname -m)
 echo "[INFO] Architecture $arch"
 if [[ $arch == "x86_64" ]]
 then
-	script="./scripts/storm_do_run.sh"
+	# script="./scripts/storm_do_run.sh"
 	
 	echo "[INFO] Updated JAVA_HOME in $script"
-	find . -path "$script" -exec perl -pi -e "s/java-8-openjdk-armhf/java-8-openjdk-amd64/g" {} +
+	find . -path "*do_run.sh" -exec perl -pi -e "s/java-8-openjdk-armhf/java-8-openjdk-amd64/g" {} +
 fi
 
 read -p "Enter SPE_LEADER_HOSTNAME: " spe_name
@@ -59,5 +63,22 @@ read -p "Enter REMOTE_GRAPHITE_HOSTNAME: " remote_name
 
 echo "[INFO] Code compilation"
 ./auto_setup.sh $spe_name $remote_name
+
+echo "[INFO] Downloading Lachesis-MOD"
+git clone https://github.com/FauFra/lachesis-mod
+cd lachesis-mod
+shopt -s extglob
+mkdir lachesis
+mv !(lachesis) lachesis
+cd ..
+
+echo "[INFO] Copying patch from Lachesis-MOD to Lachesis"
+cp lachesis-mod/lachesis/src/main/java/io/palyvos/scheduler/integration/ExecutionController.java lachesis/lachesis/src/main/java/io/palyvos/scheduler/integration/ExecutionController.java
+
+echo "[INFO] Compiling Lachesis-MOD"
+./lachesis-mod-scripts/compile_scripts/compile_lachesis-mod.sh
+
+echo "[INFO] Compiling Lachesis-MOD"
+./lachesis-mod-scripts/compile_scripts/compile_lachesis.sh
 
 rm -rf ~/lachesis-mod-scripts
